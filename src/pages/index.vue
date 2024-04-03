@@ -28,7 +28,7 @@ onMounted(() => {
     .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`)
 
   const initialize = async () => {
-    const data = await d3.csv('src/data/data.csv')
+    const data = await d3.csv(`${import.meta.env.BASE_URL}data/data.csv`)
     const rect = g.append('rect')
       .attr('width', config.width)
       .attr('height', config.height)
