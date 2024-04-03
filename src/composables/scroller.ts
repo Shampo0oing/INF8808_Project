@@ -118,7 +118,7 @@ export default function useScroller(callbacks: ((scrollDirection: string) => voi
   })
 
   const _update = () => {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop
+    const currentScroll = window.scrollY || document.documentElement.scrollTop
     steps.forEach((step) => {
       // Check if the current step is in the viewport.
       const boundingRect = step.element.value.getBoundingClientRect()
@@ -159,7 +159,7 @@ export default function useScroller(callbacks: ((scrollDirection: string) => voi
     window.addEventListener('resize', () => {
       innerHeight.value = window.innerHeight
     })
-    if ((window.pageYOffset || document.documentElement.scrollTop) > 0)
+    if ((window.scrollY || document.documentElement.scrollTop) > 0)
       _update()
   }
 

@@ -1,12 +1,46 @@
 <script setup lang="ts" generic="T extends any, O extends any">
+import * as d3 from 'd3'
 import stickyBits from 'stickybits'
-import { initialize as v1 } from '../dataviz/viz'
 
 defineOptions({
   name: 'IndexPage',
 })
 
 onMounted(() => {
+  const config = {
+    height: 500,
+    margin: {
+      bottom: 100,
+      left: 100,
+      right: 100,
+      top: 100,
+    },
+    width: 500,
+  }
+  const fullWidth = config.margin.left + config.width + config.margin.right
+  const fullHeight = config.margin.top + config.height + config.margin.bottom
+
+  const visContainer = d3.select('#viz')
+  const svg = visContainer.append('svg')
+    .attr('viewBox', `0 0 ${fullWidth} ${fullHeight}`)
+    .attr('preserveAspectRatio', 'xMidYMid')
+  const g = svg.append('g')
+    .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`)
+
+  const initialize = async () => {
+    const data = await d3.csv('src/data/data.csv')
+    const rect = g.append('rect')
+      .attr('width', config.width)
+      .attr('height', config.height)
+      .style('fill', 'green')
+
+    return data.map((d: d3.DSVRowString<string>) => () => {
+      rect.transition()
+        .duration(300)
+        .style('fill', d.color)
+    })
+  }
+
   let elements: HTMLElement[] = [];
   ['.viz'].forEach((selector) => {
     elements = elements.concat(Array.from(document.querySelectorAll(selector)))
@@ -14,15 +48,15 @@ onMounted(() => {
   stickyBits(elements, { stickyBitStickyOffset: 0 })
 
   // Initializes the scroller and the visualizations.
-  Promise.all([v1()]).then(([callbacksV1]) => {
-    scroller([callbacksV1])
+  Promise.all([initialize()]).then(([callbacks]) => {
+    scroller([callbacks])
       .initialize()
   })
 })
 </script>
 
 <template>
-  <main>
+  <div relative>
     <section class="intro text-section">
       <h1>Page title</h1>
       <p>
@@ -51,5 +85,5 @@ onMounted(() => {
       </div>
       <div id="viz" class="viz" />
     </section>
-  </main>
+  </div>
 </template>
