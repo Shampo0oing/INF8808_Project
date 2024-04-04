@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router/auto'
 import App from './App.vue'
 
 import '@unocss/reset/tailwind.css'
-import './styles/main.scss'
 import 'uno.css'
+import './styles/main.scss'
 
 const app = createApp(App)
 const router = createRouter({
