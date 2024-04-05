@@ -10,6 +10,19 @@ const BASE_URL = import.meta.env.BASE_URL
 
 let accidents: globalThis.Ref<null | any> = ref(null)
 
+// const sankeyData = {
+//   nodes: [
+//     { id: 'V' },
+//     { id: 'B' },
+//     { id: 'C' }
+//   ],
+//   links: [
+//     { source: 'V', target: 'B', value: 50 },
+//     { source: 'B', target: 'C', value: 30 },
+//     { source: 'A', target: 'C', value: 20 }
+//   ]
+// }
+
 onMounted(() => {
   // CHARGEMENT DES DONNÉES
   Promise.all([
@@ -26,7 +39,7 @@ onMounted(() => {
     d3.csv(BASE_URL + 'data/Rapport_Accident_2021.csv'),
     d3.csv(BASE_URL + 'data/Rapport_Accident_2022.csv')
   ]).then((files) => {
-    accidents.value = files
+    //accidents.value = files
     console.log(files)
   })
 
@@ -99,8 +112,7 @@ onMounted(() => {
       <section class="viz-section">
         <div class="steps">
           <section>
-            <h1>Title 1</h1>
-            <p>Text of section 1...</p>
+            <Sankey :width="800" :height="600" />
           </section>
           <section>
             <p>Title 2</p>
