@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-import * as d3 from 'd3';
-import stickyBits from 'stickybits';
+import * as d3 from 'd3'
+import stickyBits from 'stickybits'
 
 defineOptions({
   name: 'IndexPage',
@@ -8,9 +8,10 @@ defineOptions({
 
 const BASE_URL = import.meta.env.BASE_URL
 
-let accidents: globalThis.Ref<null | any> = ref(null)
+let accidents: null | any = null
+const isLoading = ref(true)
 
-onMounted(() => {
+onMounted(async () => {
   // CHARGEMENT DES DONNÉES
   Promise.all([
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2011.csv'),
@@ -23,11 +24,15 @@ onMounted(() => {
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2018.csv'),
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2019.csv'),
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2020.csv'),
-    d3.csv(BASE_URL + 'data/Rapport_Accident_2021.csv'),
-    d3.csv(BASE_URL + 'data/Rapport_Accident_2022.csv')
-  ]).then((files) => {
-    accidents.value = files
-    console.log(files)
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2021.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2022.csv`),
+  ]).then((onfulfilled) => {
+    accidents = onfulfilled
+    isLoading.value = false
+  }, (onrejected) => {
+    console.error(onrejected)
+  }).catch((err) => {
+    console.error(err)
   })
 
   const config = {
@@ -60,7 +65,7 @@ onMounted(() => {
       .style('fill', 'green')
 
     return data.map((d: d3.DSVRowString<string>) => (direction: string) => {
-      console.log(direction, d.color)
+      console.warn(direction, d.color)
       rect.transition()
         .duration(300)
         .style('fill', d.color)
@@ -82,7 +87,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="accidents">
+  <div v-if="!isLoading">
     <VizTest :accidents />
   </div>
   <div v-else>
