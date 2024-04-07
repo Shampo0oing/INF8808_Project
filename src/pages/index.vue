@@ -10,19 +10,6 @@ const BASE_URL = import.meta.env.BASE_URL
 
 let accidents: globalThis.Ref<null | any> = ref(null)
 
-// const sankeyData = {
-//   nodes: [
-//     { id: 'V' },
-//     { id: 'B' },
-//     { id: 'C' }
-//   ],
-//   links: [
-//     { source: 'V', target: 'B', value: 50 },
-//     { source: 'B', target: 'C', value: 30 },
-//     { source: 'A', target: 'C', value: 20 }
-//   ]
-// }
-
 onMounted(() => {
   // CHARGEMENT DES DONNÉES
   Promise.all([
@@ -112,9 +99,6 @@ onMounted(() => {
       <section class="viz-section">
         <div class="steps">
           <section>
-            <Sankey :width="800" :height="600" />
-          </section>
-          <section>
             <p>Title 2</p>
           </section>
           <section>
@@ -125,7 +109,8 @@ onMounted(() => {
             <p>Text of section 4...</p>
           </section>
         </div>
-        <div id="viz" class="viz" />
+        <Radar />
+        <!-- <div id="viz" class="viz" /> -->
       </section>
     </div>
   </div>
