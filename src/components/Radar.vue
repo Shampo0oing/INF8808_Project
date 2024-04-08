@@ -69,9 +69,9 @@ const drawRadarChart = (data, years) => {
     color: color,
   };
   // Call function to draw the Radar chart
-  RadarChartAnim(".radarChart", result, radarChartOptions, years);
+  RadarChart(".radarChart", result, radarChartOptions, years);
 
-  function RadarChartAnim(id, data, options, years) {
+  function RadarChart(id, data, options, years) {
     var cfg = {
       w: 600, // Width of the circle
       h: 600, // Height of the circle
