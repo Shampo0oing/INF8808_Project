@@ -1,6 +1,8 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-import * as d3 from 'd3';
-import stickyBits from 'stickybits';
+import * as d3 from 'd3'
+import stickyBits from 'stickybits'
+import type { StackedBarplotData } from '../models/types'
+import stackedData from '../../public/data/StackedBarplot.json'
 
 defineOptions({
   name: 'IndexPage',
@@ -8,7 +10,8 @@ defineOptions({
 
 const BASE_URL = import.meta.env.BASE_URL
 
-let accidents: globalThis.Ref<null | any> = ref(null)
+const accidents: globalThis.Ref<null | any> = ref(null)
+let stackedBarplotData: StackedBarplotData = {}
 
 onMounted(() => {
   // CHARGEMENT DES DONNÉES
@@ -23,12 +26,16 @@ onMounted(() => {
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2018.csv'),
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2019.csv'),
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2020.csv'),
-    d3.csv(BASE_URL + 'data/Rapport_Accident_2021.csv'),
-    d3.csv(BASE_URL + 'data/Rapport_Accident_2022.csv')
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2021.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2022.csv`),
   ]).then((files) => {
     accidents.value = files
-    console.log(files)
+    /// FONCTION UTILISÉ POUR MAPPER LES DATAS ///
+    // let val = processData(files)
   })
+
+  /// DATA ARRANGÉ DANS JSON ///
+  stackedBarplotData = stackedData.all
 
   const config = {
     height: 500,
@@ -59,8 +66,7 @@ onMounted(() => {
       .attr('height', config.height)
       .style('fill', 'green')
 
-    return data.map((d: d3.DSVRowString<string>) => (direction: string) => {
-      console.log(direction, d.color)
+    return data.map((d: d3.DSVRowString<string>) => () => {
       rect.transition()
         .duration(300)
         .style('fill', d.color)
@@ -82,10 +88,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="accidents">
+  <!-- <div v-if="accidents">
     <VizTest :accidents />
-  </div>
-  <div v-else>
+  </div> -->
+  <div>
     <div relative>
       <section class="intro text-section">
         <h1>Page title</h1>
@@ -114,6 +120,26 @@ onMounted(() => {
           </section>
         </div>
         <div id="viz" class="viz" />
+      </section>
+
+      <section class="viz-section">
+        <div class="steps">
+          <section>
+            <h1>Title 1</h1>
+            <p>Text of section 1...</p>
+          </section>
+          <section>
+            <p>Title 2</p>
+          </section>
+          <section>
+            <p>Title 3</p>
+          </section>
+          <section>
+            <h1>Title 4</h1>
+            <p>Text of section 4...</p>
+          </section>
+        </div>
+        <StackedBarplot :data-mapped="stackedBarplotData" :is-top-data="true" />
       </section>
     </div>
   </div>
