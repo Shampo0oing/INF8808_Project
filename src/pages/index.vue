@@ -1,76 +1,77 @@
 <script setup lang="ts" generic="T extends any, O extends any">
-import * as d3 from "d3";
-import stickyBits from "stickybits";
-import Radar from "~/components/Radar.vue";
+import * as d3 from 'd3'
+import stickyBits from 'stickybits'
 
 defineOptions({
-  name: "IndexPage",
-});
+  name: 'IndexPage',
+})
 
-const BASE_URL = import.meta.env.BASE_URL;
+const BASE_URL = import.meta.env.BASE_URL
 
-let accidents: null | any = null;
-const isLoading = ref(true);
-let indexArray: null | any = [0, 1];
+const accidents: null | any = ref(null)
+const accidentsRadar: null | any = ref(null)
+const yearsRadar: null | any = ref(null)
+const isLoading = ref(true)
 
 onMounted(async () => {
   // CHARGEMENT DES DONNÉES
   Promise.all([
-    d3.csv(BASE_URL + "data/Rapport_Accident_2011.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2012.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2013.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2014.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2015.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2016.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2017.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2018.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2019.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2020.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2021.csv"),
-    d3.csv(BASE_URL + "data/Rapport_Accident_2022.csv"),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2011.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2012.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2013.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2014.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2015.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2016.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2017.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2018.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2019.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2020.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2021.csv`),
+    d3.csv(`${BASE_URL}data/Rapport_Accident_2022.csv`),
   ])
     .then(
       (onfulfilled) => {
-        console.log(onfulfilled);
-        accidents = onfulfilled;
-        isLoading.value = false;
+        accidents.value = onfulfilled
+        isLoading.value = false
+        const initialize = async () => {
+          const dataCopy = accidents
+          return [
+            () => {
+              accidentsRadar.value = [dataCopy.value[0]]
+              yearsRadar.value = ['2011']
+            },
+            () => {
+              accidentsRadar.value = [dataCopy.value[8]]
+              yearsRadar.value = ['2019']
+            },
+            () => {
+              accidentsRadar.value = [dataCopy.value[0], dataCopy.value[8]]
+              yearsRadar.value = ['2011', '2019']
+            },
+          ]
+        }
+
+        let elements: HTMLElement[] = [];
+        ['.viz'].forEach((selector) => {
+          elements = elements.concat(
+            Array.from(document.querySelectorAll(selector)),
+          )
+        })
+        stickyBits(elements, { stickyBitStickyOffset: 0 })
+
+        // Initializes the scroller and the visualizations.
+        Promise.all([initialize()]).then(([callbacks]) => {
+          scroller([callbacks]).initialize()
+        })
       },
       (onrejected) => {
-        console.error(onrejected);
-      }
+        console.error(onrejected)
+      },
     )
     .catch((err) => {
-      console.error(err);
-    });
-
-  const initialize = async () => {
-    return [
-      () => {
-        indexArray = [0, 1];
-        console.log(indexArray);
-      },
-      () => {
-        indexArray = [2, 3];
-        console.log(indexArray);
-      },
-      () => {
-        indexArray = [5, 6];
-        console.log(indexArray);
-      },
-    ];
-  };
-
-  let elements: HTMLElement[] = [];
-  [".viz"].forEach((selector) => {
-    elements = elements.concat(Array.from(document.querySelectorAll(selector)));
-  });
-  stickyBits(elements, { stickyBitStickyOffset: 0 });
-
-  // Initializes the scroller and the visualizations.
-  Promise.all([initialize()]).then(([callbacks]) => {
-    scroller([callbacks]).initialize();
-  });
-});
+      console.error(err)
+    })
+})
 </script>
 
 <template>
@@ -103,21 +104,14 @@ onMounted(async () => {
             <p>Title 3</p>
           </section>
         </div>
-        <Radar
-          v-if="!isLoading"
-          class="viz"
-          :accidents="accidents"
-          :indexArray="indexArray"
-        />
+        <Radar v-if="!isLoading" class="viz" :accidents-radar="accidentsRadar" :years-radar="yearsRadar" />
       </section>
     </div>
   </div>
 </template>
+
 <style>
 .intro {
   height: 100vh;
-}
-.viz {
-  position: sticky;
 }
 </style>

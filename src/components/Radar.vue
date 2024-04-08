@@ -6,17 +6,26 @@
 import * as d3 from "d3";
 
 const props = defineProps({
-  accidents: {
+  accidentsRadar: {
     type: Array,
     required: true,
   },
-  indexArray: {
+  yearsRadar: {
     type: Array,
     required: true,
   },
 });
 
-onMounted(() => {
+watch(
+  () => props.accidentsRadar,
+  (newVal, oldVal) => {
+    // Handle the changes to the prop here
+    d3.select(".radarChart").selectAll("*").remove();
+    drawRadarChart(newVal, props.yearsRadar);
+  }
+);
+
+const drawRadarChart = (data, years) => {
   var margin = { top: 200, right: 200, bottom: 200, left: 200 };
   var width =
     Math.min(1000, window.innerWidth - 10) - margin.left - margin.right;
@@ -25,15 +34,8 @@ onMounted(() => {
     window.innerHeight - margin.top - margin.bottom - 20
   );
 
-  console.log(props.accidents);
-  console.log(props.indexArray);
-
-  let readArray = [
-    props.accidents[props.indexArray[0]],
-    props.accidents[props.indexArray[1]],
-  ];
   let result = [];
-  readArray.forEach((file) => {
+  props.accidentsRadar.forEach((file) => {
     let data = file.reduce((acc, curr) => {
       const currentMonth = curr.MS_ACCDN;
       const existingData = acc.find((item) => item.axis === currentMonth);
@@ -51,7 +53,6 @@ onMounted(() => {
     data.push(data[0]);
     result.push(data);
   });
-  console.log(result);
   /// ///////////////////////////////////////////////////////////
   /// ///////////////// Draw the Chart //////////////////////////
   /// ///////////////////////////////////////////////////////////
@@ -68,10 +69,9 @@ onMounted(() => {
     color: color,
   };
   // Call function to draw the Radar chart
-  RadarChartAnim(".radarChart", result, radarChartOptions);
+  RadarChartAnim(".radarChart", result, radarChartOptions, years);
 
-  function RadarChartAnim(id, data, options) {
-    console.log(data);
+  function RadarChartAnim(id, data, options, years) {
     var cfg = {
       w: 600, // Width of the circle
       h: 600, // Height of the circle
@@ -502,7 +502,6 @@ onMounted(() => {
     /////////////////////////////////////////////////////////
     // create a list of keys
     var keys = ["Hiver", "Printemps", "Été", "Automne"];
-    var yearKeys = ["2021", "2022"];
 
     // Usually you have a color scale in your chart already
     var color = d3.scaleOrdinal().domain(keys).range(d3.schemeSet1);
@@ -544,7 +543,7 @@ onMounted(() => {
     /////////////////// years dots /////////////////////////
     svg
       .selectAll("mydots")
-      .data(yearKeys)
+      .data(years)
       .enter()
       .append("circle")
       .attr("cx", 150)
@@ -560,7 +559,7 @@ onMounted(() => {
     // Add one dot in the legend for each name.
     svg
       .selectAll("mylabels")
-      .data(yearKeys)
+      .data(years)
       .enter()
       .append("text")
       .attr("x", 142 + size)
@@ -612,5 +611,5 @@ onMounted(() => {
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle");
   } // RadarChart
-});
+};
 </script>
