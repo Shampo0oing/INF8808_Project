@@ -88,7 +88,7 @@ onMounted(async () => {
 
 <template>
   <div v-if="!isLoading">
-    <VizTest :accidents />
+    <BarChart :accidents />
   </div>
   <div v-else>
     <div relative>
