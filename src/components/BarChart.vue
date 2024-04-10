@@ -1,31 +1,41 @@
 <script setup>
 import * as d3 from 'd3'
 
+const props = defineProps({
+  accidents: {
+    type: Array,
+    required: true,
+  },
+})
+
 const activeTab = ref('all')
 const showModal = ref(false)
 const accidentCounts = ref(null)
 const years = Array.from({ length: 12 }, (_, i) => i + 2011)
 const yearsData = {}
 
-onMounted(async () => {
-  const BASE_URL = '/data/'
+function initialize() {
+  return new Promise((resolve) => {
+    accidentCounts.value = props.accidents.flat().reduce((acc, row, index) => {
+      const type = row.CD_COND_METEO
+      const year = years[index % years.length]
+      if (!acc[year])
+        acc[year] = {}
 
-  const dataPromises = years.map(year => d3.csv(`${BASE_URL}Rapport_Accident_${year}.csv`))
+      acc[year][type] = (acc[year][type] || 0) + 1
+      return acc
+    }, {})
 
-  const data = await Promise.all(dataPromises)
+    createBarChart()
 
-  accidentCounts.value = data.flat().reduce((acc, row, index) => {
-    const type = row.CD_COND_METEO
-    const year = years[index % years.length]
-    if (!acc[year])
-      acc[year] = {}
-
-    acc[year][type] = (acc[year][type] || 0) + 1
-    return acc
-  }, {})
-
-  createBarChart()
-})
+    resolve([
+      () => console.warn(1),
+      () => console.warn(2),
+      () => console.warn(3),
+      () => console.warn(4),
+    ])
+  })
+}
 
 function changeTab(tab) {
   activeTab.value = tab
@@ -221,48 +231,70 @@ function showChart(chartId) {
 function closeModal() {
   showModal.value = false
 }
+
+defineExpose({ initialize })
 </script>
 
 <template>
-  <div class="tabs">
-    <button class="tab" :class="{ active: activeTab === 'all' }" @click="changeTab('all')">
-      Vue générale
-    </button>
-    <button class="tab" :class="{ active: activeTab === 'byYear' }" @click="changeTab('byYear')">
-      Vue par année
-    </button>
-  </div>
-  <div v-if="showModal" class="modal-backdrop" @click="closeModal" />
-  <div id="chartAll" class="chart" />
-  <div id="chartByYear" class="chart" style="display: none;">
-    <div class="chart-row">
-      <div id="chart2011" @click="showChart('chart2011')" />
-      <div id="chart2012" @click="showChart('chart2012')" />
-      <div id="chart2013" @click="showChart('chart2013')" />
-      <div id="chart2014" @click="showChart('chart2014')" />
+  <section class="viz-section">
+    <div class="steps">
+      <section>
+        <h1>Title 1</h1>
+        <p>Text of section 1...</p>
+      </section>
+      <section>
+        <p>Title 2</p>
+      </section>
+      <section>
+        <p>Title 3</p>
+      </section>
+      <section>
+        <h1>Title 4</h1>
+        <p>Text of section 4...</p>
+      </section>
     </div>
-    <div class="chart-row">
-      <div id="chart2015" @click="showChart('chart2015')" />
-      <div id="chart2016" @click="showChart('chart2016')" />
-      <div id="chart2017" @click="showChart('chart2017')" />
-      <div id="chart2018" @click="showChart('chart2018')" />
+    <div class="viz">
+      <div class="tabs">
+        <button class="tab" :class="{ active: activeTab === 'all' }" @click="changeTab('all')">
+          Vue générale
+        </button>
+        <button class="tab" :class="{ active: activeTab === 'byYear' }" @click="changeTab('byYear')">
+          Vue par année
+        </button>
+      </div>
+      <div v-if="showModal" class="modal-backdrop" @click="closeModal" />
+      <div id="chartAll" class="chart" />
+      <div id="chartByYear" class="chart" style="display: none;">
+        <div class="chart-row">
+          <div id="chart2011" @click="showChart('chart2011')" />
+          <div id="chart2012" @click="showChart('chart2012')" />
+          <div id="chart2013" @click="showChart('chart2013')" />
+          <div id="chart2014" @click="showChart('chart2014')" />
+        </div>
+        <div class="chart-row">
+          <div id="chart2015" @click="showChart('chart2015')" />
+          <div id="chart2016" @click="showChart('chart2016')" />
+          <div id="chart2017" @click="showChart('chart2017')" />
+          <div id="chart2018" @click="showChart('chart2018')" />
+        </div>
+        <div class="chart-row">
+          <div id="chart2019" @click="showChart('chart2019')" />
+          <div id="chart2020" @click="showChart('chart2020')" />
+          <div id="chart2021" @click="showChart('chart2021')" />
+          <div id="chart2022" @click="showChart('chart2022')" />
+        </div>
+      </div>
+      <div v-if="showModal" id="chartModal" class="modal">
+        <button class="close-button" @click="closeModal">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div id="chartModalContent" class="modal-content" />
+      </div>
     </div>
-    <div class="chart-row">
-      <div id="chart2019" @click="showChart('chart2019')" />
-      <div id="chart2020" @click="showChart('chart2020')" />
-      <div id="chart2021" @click="showChart('chart2021')" />
-      <div id="chart2022" @click="showChart('chart2022')" />
-    </div>
-  </div>
-  <div v-if="showModal" id="chartModal" class="modal">
-    <button class="close-button" @click="closeModal">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
-    </button>
-    <div id="chartModalContent" class="modal-content" />
-  </div>
+  </section>
 </template>
 
 <style scoped>

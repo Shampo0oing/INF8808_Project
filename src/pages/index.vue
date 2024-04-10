@@ -1,10 +1,17 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import * as d3 from 'd3'
 import stickyBits from 'stickybits'
+import BarChart from '~/components/BarChart.vue'
+import Sankey from '~/components/Sankey.vue'
 
 defineOptions({
   name: 'IndexPage',
 })
+
+const years = Array.from({ length: 12 }, (_, i) => i + 2011)
+
+const sankeyRef = ref<InstanceType<typeof Sankey>>()
+const barChartRef = ref<InstanceType<typeof BarChart>>()
 
 const BASE_URL = import.meta.env.BASE_URL
 
@@ -12,25 +19,33 @@ let accidents: null | any = null
 const isLoading = ref(true)
 
 onMounted(async () => {
-  // CHARGEMENT DES DONNÉES
-  Promise.all([
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2011.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2012.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2013.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2014.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2015.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2016.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2017.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2018.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2019.csv'),
-    // d3.csv(BASE_URL + 'data/Rapport_Accident_2020.csv'),
-    d3.csv(`${BASE_URL}data/Rapport_Accident_2021.csv`),
-    d3.csv(`${BASE_URL}data/Rapport_Accident_2022.csv`),
-  ])
+  // Load the data
+  Promise.all(years.map(year => d3.csv(`${BASE_URL}data/Rapport_Accident_${year}.csv`)))
     .then(
       (onfulfilled) => {
         accidents = onfulfilled
+        // Filter out the data for Montréal (06)
+        for (let i = 0; i < accidents.length; i++)
+          accidents[i] = accidents[i].filter((el: any) => Object.values(el)[8] !== 'Montréal (06)')
+
+        // Data as been loaded
         isLoading.value = false
+
+        nextTick(() => {
+          let elements: HTMLElement[] = [];
+          ['.viz'].forEach((selector) => {
+            elements = elements.concat(Array.from(document.querySelectorAll(selector)))
+          })
+          stickyBits(elements, { stickyBitStickyOffset: 0 })
+
+          // Initializes the scroller and the visualizations.
+          Promise.all([
+            sankeyRef.value!.initialize(),
+            barChartRef.value!.initialize(),
+          ]).then(([c1, c2]) => {
+            scroller([c1, c2]).initialize()
+          })
+        })
       },
       (onrejected) => {
         console.error(onrejected)
@@ -39,66 +54,11 @@ onMounted(async () => {
     .catch((err) => {
       console.error(err)
     })
-
-  const config = {
-    height: 500,
-    margin: {
-      bottom: 100,
-      left: 100,
-      right: 100,
-      top: 100,
-    },
-    width: 500,
-  }
-  const fullWidth = config.margin.left + config.width + config.margin.right
-  const fullHeight = config.margin.top + config.height + config.margin.bottom
-
-  const visContainer = d3.select('#viz')
-  const svg = visContainer
-    .append('svg')
-    .attr('viewBox', `0 0 ${fullWidth} ${fullHeight}`)
-    .attr('preserveAspectRatio', 'xMidYMid')
-  const g = svg
-    .append('g')
-    .attr(
-      'transform',
-      `translate(${config.margin.left}, ${config.margin.top})`,
-    )
-
-  const initialize = async () => {
-    const BASE_URL = import.meta.env.BASE_URL
-
-    const data = await d3.csv(`${BASE_URL}data/data.csv`)
-    const rect = g
-      .append('rect')
-      .attr('width', config.width)
-      .attr('height', config.height)
-      .style('fill', 'green')
-
-    return data.map((d: d3.DSVRowString<string>) => (direction: string) => {
-      console.warn(direction, d.color)
-      rect.transition().duration(300).style('fill', d.color)
-    })
-  }
-
-  let elements: HTMLElement[] = [];
-  ['.viz'].forEach((selector) => {
-    elements = elements.concat(Array.from(document.querySelectorAll(selector)))
-  })
-  stickyBits(elements, { stickyBitStickyOffset: 0 })
-
-  // Initializes the scroller and the visualizations.
-  Promise.all([initialize()]).then(([callbacks]) => {
-    scroller([callbacks]).initialize()
-  })
 })
 </script>
 
 <template>
-  <div v-if="!isLoading">
-    <Sankey :accidents />
-  </div>
-  <div v-else>
+  <div>
     <div relative>
       <section class="intro text-section">
         <h1>Page title</h1>
@@ -112,25 +72,10 @@ onMounted(async () => {
           culpa qui officia deserunt mollit anim id est laborum.
         </p>
       </section>
-      <section class="viz-section">
-        <div class="steps">
-          <section>
-            <h1>Title 1</h1>
-            <p>Text of section 1...</p>
-          </section>
-          <section>
-            <p>Title 2</p>
-          </section>
-          <section>
-            <p>Title 3</p>
-          </section>
-          <section>
-            <h1>Title 4</h1>
-            <p>Text of section 4...</p>
-          </section>
-        </div>
-        <div id="viz" class="viz" />
-      </section>
+      <div v-if="!isLoading">
+        <Sankey ref="sankeyRef" :accidents />
+        <BarChart ref="barChartRef" :accidents />
+      </div>
     </div>
   </div>
 </template>
