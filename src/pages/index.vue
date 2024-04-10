@@ -26,14 +26,19 @@ onMounted(async () => {
     // d3.csv(BASE_URL + 'data/Rapport_Accident_2020.csv'),
     d3.csv(`${BASE_URL}data/Rapport_Accident_2021.csv`),
     d3.csv(`${BASE_URL}data/Rapport_Accident_2022.csv`),
-  ]).then((onfulfilled) => {
-    accidents = onfulfilled
-    isLoading.value = false
-  }, (onrejected) => {
-    console.error(onrejected)
-  }).catch((err) => {
-    console.error(err)
-  })
+  ])
+    .then(
+      (onfulfilled) => {
+        accidents = onfulfilled
+        isLoading.value = false
+      },
+      (onrejected) => {
+        console.error(onrejected)
+      },
+    )
+    .catch((err) => {
+      console.error(err)
+    })
 
   const config = {
     height: 500,
@@ -49,26 +54,30 @@ onMounted(async () => {
   const fullHeight = config.margin.top + config.height + config.margin.bottom
 
   const visContainer = d3.select('#viz')
-  const svg = visContainer.append('svg')
+  const svg = visContainer
+    .append('svg')
     .attr('viewBox', `0 0 ${fullWidth} ${fullHeight}`)
     .attr('preserveAspectRatio', 'xMidYMid')
-  const g = svg.append('g')
-    .attr('transform', `translate(${config.margin.left}, ${config.margin.top})`)
+  const g = svg
+    .append('g')
+    .attr(
+      'transform',
+      `translate(${config.margin.left}, ${config.margin.top})`,
+    )
 
   const initialize = async () => {
     const BASE_URL = import.meta.env.BASE_URL
 
     const data = await d3.csv(`${BASE_URL}data/data.csv`)
-    const rect = g.append('rect')
+    const rect = g
+      .append('rect')
       .attr('width', config.width)
       .attr('height', config.height)
       .style('fill', 'green')
 
     return data.map((d: d3.DSVRowString<string>) => (direction: string) => {
       console.warn(direction, d.color)
-      rect.transition()
-        .duration(300)
-        .style('fill', d.color)
+      rect.transition().duration(300).style('fill', d.color)
     })
   }
 
@@ -80,25 +89,27 @@ onMounted(async () => {
 
   // Initializes the scroller and the visualizations.
   Promise.all([initialize()]).then(([callbacks]) => {
-    scroller([callbacks])
-      .initialize()
+    scroller([callbacks]).initialize()
   })
 })
 </script>
 
 <template>
   <div v-if="!isLoading">
-    <BarChart :accidents />
+    <Sankey :accidents />
   </div>
   <div v-else>
     <div relative>
       <section class="intro text-section">
         <h1>Page title</h1>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+          culpa qui officia deserunt mollit anim id est laborum.
         </p>
       </section>
       <section class="viz-section">
