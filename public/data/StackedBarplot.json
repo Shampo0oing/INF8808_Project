@@ -1,84 +1,84 @@
 {
   "all": {
     "Sèche": {
-      "Mortel ou grave": 13526,
-      "Léger": 190655,
-      "Dommages matériels seulement": 472041,
-      "Dommages matériels inférieurs au seuil de rapportage": 328649
+      "Mortel ou grave": 2021,
+      "Léger": 44514,
+      "Dommages matériels seulement": 89658,
+      "Dommages matériels inférieurs au seuil de rapportage": 72857
     },
     "Glacée": {
-      "Mortel ou grave": 804,
-      "Léger": 16425,
-      "Dommages matériels seulement": 50603,
-      "Dommages matériels inférieurs au seuil de rapportage": 22303
+      "Mortel ou grave": 41,
+      "Léger": 1661,
+      "Dommages matériels seulement": 4803,
+      "Dommages matériels inférieurs au seuil de rapportage": 2454
     },
     "Enneigée": {
-      "Mortel ou grave": 997,
-      "Léger": 22941,
-      "Dommages matériels seulement": 102593,
-      "Dommages matériels inférieurs au seuil de rapportage": 70756
+      "Mortel ou grave": 96,
+      "Léger": 3192,
+      "Dommages matériels seulement": 13459,
+      "Dommages matériels inférieurs au seuil de rapportage": 12326
     },
     "Autre": {
-      "Mortel ou grave": 216,
-      "Léger": 2219,
-      "Dommages matériels seulement": 16604,
-      "Dommages matériels inférieurs au seuil de rapportage": 32444
+      "Mortel ou grave": 48,
+      "Léger": 705,
+      "Dommages matériels seulement": 6126,
+      "Dommages matériels inférieurs au seuil de rapportage": 11674
     },
     "Mouillée": {
-      "Mortel ou grave": 2732,
-      "Léger": 50695,
-      "Dommages matériels seulement": 140301,
-      "Dommages matériels inférieurs au seuil de rapportage": 83603
-    },
-    "Neige durcie": {
-      "Mortel ou grave": 243,
-      "Léger": 4406,
-      "Dommages matériels seulement": 21025,
-      "Dommages matériels inférieurs au seuil de rapportage": 15700
-    },
-    "Boueuse": {
-      "Mortel ou grave": 47,
-      "Léger": 241,
-      "Dommages matériels seulement": 775,
-      "Dommages matériels inférieurs au seuil de rapportage": 495
+      "Mortel ou grave": 583,
+      "Léger": 12245,
+      "Dommages matériels seulement": 25180,
+      "Dommages matériels inférieurs au seuil de rapportage": 17253
     },
     "Gadoue/neige": {
-      "Mortel ou grave": 355,
-      "Léger": 7109,
-      "Dommages matériels seulement": 21641,
-      "Dommages matériels inférieurs au seuil de rapportage": 10114
+      "Mortel ou grave": 30,
+      "Léger": 873,
+      "Dommages matériels seulement": 2492,
+      "Dommages matériels inférieurs au seuil de rapportage": 1515
+    },
+    "Neige durcie": {
+      "Mortel ou grave": 11,
+      "Léger": 425,
+      "Dommages matériels seulement": 1451,
+      "Dommages matériels inférieurs au seuil de rapportage": 1410
     },
     "Sable/gravier": {
-      "Mortel ou grave": 246,
-      "Léger": 2026,
-      "Dommages matériels seulement": 3621,
-      "Dommages matériels inférieurs au seuil de rapportage": 2281
+      "Mortel ou grave": 5,
+      "Léger": 104,
+      "Dommages matériels seulement": 137,
+      "Dommages matériels inférieurs au seuil de rapportage": 141
     },
     "Huileuse": {
-      "Mortel ou grave": 3,
-      "Léger": 135,
-      "Dommages matériels seulement": 72,
-      "Dommages matériels inférieurs au seuil de rapportage": 51
+      "Mortel ou grave": 1,
+      "Léger": 23,
+      "Dommages matériels seulement": 20,
+      "Dommages matériels inférieurs au seuil de rapportage": 5
+    },
+    "Boueuse": {
+      "Mortel ou grave": 1,
+      "Léger": 13,
+      "Dommages matériels seulement": 40,
+      "Dommages matériels inférieurs au seuil de rapportage": 39
     },
     "Accumulation d’eau": {
-      "Mortel ou grave": 72,
-      "Léger": 1360,
-      "Dommages matériels seulement": 3382,
-      "Dommages matériels inférieurs au seuil de rapportage": 900
+      "Mortel ou grave": 9,
+      "Léger": 164,
+      "Dommages matériels seulement": 504,
+      "Dommages matériels inférieurs au seuil de rapportage": 137
     }
   },
   "regrouped": {
     "Sèche": {
-      "Mortel ou grave": 13526,
-      "Léger": 190655,
-      "Dommages matériels seulement": 472041,
-      "Dommages matériels inférieurs au seuil de rapportage": 328649
+      "Mortel ou grave": 2021,
+      "Léger": 44514,
+      "Dommages matériels seulement": 89658,
+      "Dommages matériels inférieurs au seuil de rapportage": 72857
     },
     "Autre": {
-      "Mortel ou grave": 5715,
-      "Léger": 107557,
-      "Dommages matériels seulement": 360617,
-      "Dommages matériels inférieurs au seuil de rapportage": 238647
+      "Mortel ou grave": 825,
+      "Léger": 19405,
+      "Dommages matériels seulement": 54212,
+      "Dommages matériels inférieurs au seuil de rapportage": 46954
     }
   }
 }

@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
 import type { StackedBarplotData } from '../models/types'
-import stackedData from '../../public/data/StackedBarplot.json'
 
 const props = defineProps<{
   dataMapped: StackedBarplotData
-  isTopData: boolean
+  isTopData: boolean | null
+  configNo: number
 }>()
 
-let data: StackedBarplotData = stackedData.all
-/// POUR AFFICHER LES 4 ÉTATS DE SURFACE DE ROUTE AVEC LE PLUS D'ACCIDENTS ///
-// data = getFilteredData(props.dataMapped,props.isTopData)
+let data: StackedBarplotData = {}
 
-/// COMPARAISON ÉTAT DE SURFACE DE SÈCHE VS TOUS LES AUTRES ///
-data = props.dataMapped
+/// POUR AFFICHER LES 4 ÉTATS DE SURFACE DE ROUTE AVEC LE PLUS D'ACCIDENTS ///
+if (props.isTopData != null) {
+  data = getFilteredData(props.dataMapped, props.isTopData)
+}
+else {
+  /// COMPARAISON ÉTAT DE SURFACE DE SÈCHE VS TOUS LES AUTRES ///
+  data = props.dataMapped
+}
 
 onMounted(() => {
   const margin = { top: 10, right: 10, bottom: 30, left: 80 }
-  const width = 500 - margin.left - margin.right
+  const width = 550 - margin.left - margin.right
   const height = 450 - margin.top - margin.bottom
 
-  const svg = d3.select('#stacked_barplot')
+  const svg = d3.select(`#stacked_barplot${props.configNo}`)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
@@ -79,9 +83,9 @@ onMounted(() => {
   // ----------------
   // TOOLTIP
   // ----------------
-  const tooltip = d3.select('#viz-6')
+  const tooltip = d3.select(`#viz-6_${props.configNo}`)
     .insert('div', ':first-child')
-    .attr('class', 'tooltip')
+    .attr('class', `tooltip${props.configNo}`)
 
   // Function to show tooltip
   function mouseover(event: any, d: any) {
@@ -112,7 +116,7 @@ onMounted(() => {
   // ----------------
   // LEGEND
   // ----------------
-  const legend = d3.select('#legend').append('svg').attr('width', '350px')
+  const legend = d3.select(`#legend${props.configNo}`).append('svg').attr('width', '350px')
 
   const legendItems = legend.selectAll('.legend-item')
     .data(subgroups)
@@ -134,26 +138,26 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="viz-6" class="viz">
-    <div id="stacked_barplot" />
-    <div id="legend" />
+  <div :id="`viz-6_${props.configNo}`" class="viz">
+    <div :id="`stacked_barplot${props.configNo}`" />
+    <div :id="`legend${props.configNo}`" />
   </div>
 </template>
 
 <style>
-    #viz-6 {
+  div[id^='viz'] {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   position: sticky;
 }
-#legend {
+div[id^='legend'] {
   display: flex;
   align-items: center;
   width: 430px;
 }
-.tooltip {
+div[class^='tooltip'] {
   opacity: 0;
   background-color: white;
   border: 1px solid;

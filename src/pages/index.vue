@@ -11,7 +11,15 @@ defineOptions({
 const BASE_URL = import.meta.env.BASE_URL
 
 const accidents: globalThis.Ref<null | any> = ref(null)
-let stackedBarplotData: StackedBarplotData = {}
+
+/// DATA ARRANGÉ DANS JSON ///
+const stackedBarplotData: StackedBarplotData = stackedData.all
+let isTopData: boolean = true
+
+async function refreshData() {
+  isTopData = !isTopData
+  await nextTick()
+}
 
 onMounted(() => {
   // CHARGEMENT DES DONNÉES
@@ -31,11 +39,8 @@ onMounted(() => {
   ]).then((files) => {
     accidents.value = files
     /// FONCTION UTILISÉ POUR MAPPER LES DATAS ///
-    // let val = processData(files)
+    // console.log(processData(files))
   })
-
-  /// DATA ARRANGÉ DANS JSON ///
-  stackedBarplotData = stackedData.all
 
   const config = {
     height: 500,
@@ -130,16 +135,30 @@ onMounted(() => {
           </section>
           <section>
             <p>Title 2</p>
-          </section>
-          <section>
-            <p>Title 3</p>
-          </section>
-          <section>
-            <h1>Title 4</h1>
-            <p>Text of section 4...</p>
+            <button style="background-color: blueviolet; height: 25px;" @click="refreshData()">
+              {{ isTopData }}
+            </button>
           </section>
         </div>
-        <StackedBarplot :data-mapped="stackedBarplotData" :is-top-data="true" />
+        <StackedBarplot :data-mapped="stackedBarplotData" :is-top-data="isTopData" :config-no="1" />
+      </section>
+      <section class="viz-section">
+        <div class="steps">
+          <section>
+            <h1>Title 1</h1>
+            <p>Text of section 1...</p>
+          </section>
+        </div>
+        <StackedBarplot :data-mapped="stackedBarplotData" :is-top-data="!isTopData" :config-no="2" />
+      </section>
+      <section class="viz-section">
+        <div class="steps">
+          <section>
+            <h1>Title 1</h1>
+            <p>Text of section 1...</p>
+          </section>
+        </div>
+        <StackedBarplot :data-mapped="stackedData.regrouped" :is-top-data="null" :config-no="3" />
       </section>
     </div>
   </div>

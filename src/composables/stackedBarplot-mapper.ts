@@ -32,11 +32,12 @@ export function processData(files: any[]): StackedBarplotData {
   // };
 
   files.forEach((file) => {
-    file.forEach((row) => {
+    file.forEach((row: any) => {
       const etatCode = row.CD_ETAT_SURFC
       const etat = etatMapping[etatCode]
       const gravite = row.GRAVITE
-
+      // const regAdm = row[`------------"REG_ADM"`];
+      // if(regAdm === "Montréal (06)"){
       if (!data[etat]) {
         data[etat] = {
           'Mortel ou grave': 0,
@@ -45,9 +46,9 @@ export function processData(files: any[]): StackedBarplotData {
           'Dommages matériels inférieurs au seuil de rapportage': 0,
         }
       }
-
       if (gravite in data[etat])
         data[etat][gravite]++
+      // }
     })
   })
 
