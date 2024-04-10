@@ -17,6 +17,7 @@ const yearsRadar: null | any = ref(null)
 const isLoading = ref(true)
 const isTopData: null | any = ref(true)
 const configNo = ref(0)
+const vizText: string[] = ['plus', 'moins']
 
 async function refreshData() {
   configNo.value = (1 + configNo.value) % 3
@@ -128,19 +129,25 @@ onMounted(async () => {
               En réalité, lorsque la surface de la route est sèche, les conducteurs peuvent être enclins à adopter une vitesse plus élevée,
               à une distance de suivi plus courte et à une conduite plus agressive en général, ce qui accroît le risque d'accidents.
             </p>
-            <button
-              style="background-color: orange;
-            height: 25px;" @click="refreshData()"
-            >
-              Change view
-            </button>
           </section>
           <section>
-            <p>
-              Dans le domaine de la sécurité routière, l'état de la chaussée joue un rôle primordial, influençant le nombre d'accidents.
-              Par exemple, lorsqu'elle est glissante en hiver, une route peut présenter des risques accrus de dérapage
-              ou d'accident, notamment en raison d'une adhérence réduite des pneus sur la surface.
+            <p v-if="configNo < 2">
+              Voici une visualisation des 4 états de surface de route causant le {{ vizText[configNo] }} d'accidents
             </p>
+            <p v-else>
+              Voici une visualisation qui compare les accidents causés par une chaussée sèche et
+              par les autres états de surface de route. On observe que le nombre d'accidents et la gravité de ceux-ci
+              sont quasiment le double lorsque la route est sèche.
+            </p>
+            <div style="border-style:solid; border: 5px; border-color: black">
+              <button
+                type="button"
+                style="background-color: orange; margin:10px; padding: 0 10px; height: 25px;"
+                @click="refreshData()"
+              >
+                Changer de vue
+              </button>
+            </div>
           </section>
         </div>
         <StackedBarplot
