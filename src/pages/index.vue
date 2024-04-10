@@ -32,28 +32,28 @@ onMounted(async () => {
     .then(
       (onfulfilled) => {
         accidents.value = onfulfilled;
+        accidentsRadar.value = [
+          accidents.value[0],
+          accidents.value[8],
+          accidents.value[11],
+        ];
+        yearsRadar.value = ["2011"];
         isLoading.value = false;
         const initialize = async () => {
-          const dataCopy = accidents;
           return [
             () => {
-              accidentsRadar.value = [dataCopy.value[0]];
               yearsRadar.value = ["2011"];
             },
             () => {
-              accidentsRadar.value = [dataCopy.value[8]];
               yearsRadar.value = ["2019"];
             },
             () => {
-              accidentsRadar.value = [dataCopy.value[0], dataCopy.value[8]];
               yearsRadar.value = ["2011", "2019"];
             },
             () => {
-              accidentsRadar.value = [dataCopy.value[11]];
               yearsRadar.value = ["2022"];
             },
             () => {
-              accidentsRadar.value = [dataCopy.value[8], dataCopy.value[11]];
               yearsRadar.value = ["2019", "2022"];
             },
           ];
@@ -105,28 +105,30 @@ onMounted(async () => {
           <section>
             <p>
               En 2011, Montréal a enregistré un nombre élevé d'accidents,
-              atteignant un pic de 17600. Aucune saison ne se distingue
-              particulièrement en termes d'accidents, mais nous pouvons
-              constater une baisse légère durant l'été et le printemps.
+              atteignant un pic de 3980. Aucune saison ne se distingue
+              particulièrement en termes d'accidents, mais il est remarquable de
+              noter une légère hausse durant l'hiver, période où le pic est
+              observé.
             </p>
           </section>
           <section>
             <p>
               En 2019, la pandémie de Covid-19 frappe Montréal. Malgré la
-              tendance croissante à rester chez soi, un pic de 15600 accidents
-              est enregistré en un mois. Comme précédemment, les taux
-              d'accidents semblent être plus élevés en automne et en hiver par
-              rapport à l'été et au printemps.
+              tendance croissante à rester chez soi, un pic de 2350 accidents
+              est enregistré en un mois. Comme précédemment, Les taux
+              d'accidents ne semblent pas être significativement plus élevés à
+              une saison par rapport à une autre, mais le pic a été atteint en
+              hiver.
             </p>
           </section>
           <section>
             <p>
-              En comparant les deux années, on remarque une diminution du nombre
-              d'accidents de 2011 à 2019. La crise sanitaire liée à la Covid-19
-              a probablement joué un rôle dans cette baisse, étant donné que
-              moins de personnes étaient en circulation pendant le confinement.
-              Cependant, ce décroissement restera-t-elle constante après la fin
-              de la pandémie?
+              En comparant les deux années, on remarque une diminution
+              importante du nombre d'accidents de 2011 à 2019. La crise
+              sanitaire liée à la Covid-19 a probablement joué un rôle dans
+              cette baisse, étant donné que moins de personnes étaient en
+              circulation pendant le confinement. Cependant, ce décroissement
+              restera-t-elle constante après la fin de la pandémie?
             </p>
           </section>
           <section>
@@ -134,16 +136,15 @@ onMounted(async () => {
               En 2022, la fin de la pandémie marque un retour graduel des
               déplacements, en particulier pour le travail. La tendance à la
               baisse semble avoir été maintenue, car le pic mensuel d'accidents
-              est désormais de 10600. Une fois de plus, l'automne et l'hiver
-              enregistrent davantage d'accidents que l'été et le printemps. Il
-              est possible que la présence de neige durant ces deux saisons
-              contribue à rendre les conditions routières plus précaires, ce qui
-              entraîne une augmentation des accidents.
+              est désormais de 1860. Cette année-là, nous observons que le pic
+              d'accidents a été atteint en automne, marquant un changement par
+              rapport aux années précédentes où l'hiver était généralement la
+              saison la plus critique en termes d'accidents.
             </p>
           </section>
           <section>
             <p>
-              En comparant les années 2019 et 2022, on ressent clairement une
+              En comparant les années 2019 et 2022, on ressent une légère
               différence. En général, le nombre d'accidents est moins élevé
               chaque mois. Il est possible que les Montréalais aient pris
               conscience de l'importance de la sécurité et de l'attention après
