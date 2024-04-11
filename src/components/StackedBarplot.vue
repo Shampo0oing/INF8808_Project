@@ -14,9 +14,20 @@ function initialize() {
       () => console.warn(1),
       () => console.warn(2),
       () => console.warn(3),
-      () => { refreshData() },
-      () => { refreshData() },
-      () => { refreshData() },
+      () => {
+        if (configNo.value === 1) {
+          configNo.value = 2
+          refreshData()
+        }
+      },
+      () => {
+        if (configNo.value === 0 || configNo.value === 2)
+          refreshData()
+      },
+      () => {
+        if (configNo.value === 1)
+          refreshData()
+      },
     ])
   })
 }
