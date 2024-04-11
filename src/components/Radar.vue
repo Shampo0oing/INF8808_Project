@@ -1,51 +1,114 @@
 <template>
-  <div ref="radarChart" class="radarChart"></div>
+  <section class="viz-section">
+    <div class="steps">
+      <section>
+        <p>
+          En 2011, Montréal a enregistré un nombre élevé d'accidents, atteignant
+          un pic de 3980. Aucune saison ne se distingue particulièrement en
+          termes d'accidents, mais il est remarquable de noter une légère hausse
+          durant l'hiver, période où le pic est observé.
+        </p>
+      </section>
+      <section>
+        <p>
+          En 2019, la pandémie de Covid-19 frappe Montréal. Malgré la tendance
+          croissante à rester chez soi, un pic de 2350 accidents est enregistré
+          en un mois. Comme précédemment, Les taux d'accidents ne semblent pas
+          être significativement plus élevés à une saison par rapport à une
+          autre, mais le pic a été atteint en hiver.
+        </p>
+      </section>
+      <section>
+        <p>
+          En comparant les deux années, on remarque une diminution importante du
+          nombre d'accidents de 2011 à 2019. La crise sanitaire liée à la
+          Covid-19 a probablement joué un rôle dans cette baisse, étant donné
+          que moins de personnes étaient en circulation pendant le confinement.
+          Cependant, ce décroissement restera-t-elle constante après la fin de
+          la pandémie?
+        </p>
+      </section>
+      <section>
+        <p>
+          En 2022, la fin de la pandémie marque un retour graduel des
+          déplacements, en particulier pour le travail. La tendance à la baisse
+          semble avoir été maintenue, car le pic mensuel d'accidents est
+          désormais de 1860. Cette année-là, nous observons que le pic
+          d'accidents a été atteint en automne, marquant un changement par
+          rapport aux années précédentes où l'hiver était généralement la saison
+          la plus critique en termes d'accidents.
+        </p>
+      </section>
+      <section>
+        <p>
+          En comparant les années 2019 et 2022, on ressent une légère
+          différence. En général, le nombre d'accidents est moins élevé chaque
+          mois. Il est possible que les Montréalais aient pris conscience de
+          l'importance de la sécurité et de l'attention après la pandémie, ce
+          qui pourrait également avoir influencé leur façon de conduire. Qui
+          sait!
+        </p>
+      </section>
+    </div>
+    <div ref="radarChart" class="viz radarChart"></div>
+  </section>
 </template>
 
 <script setup>
 import * as d3 from "d3";
 
-const dataYears = {
-  2011: 0,
-  2019: 1,
-  2022: 2,
-};
+const radarContainer = ref(null);
 
 var radarChartOptions = {};
-
 var vizData = [];
 
 const props = defineProps({
-  accidentsRadar: {
-    type: Array,
-    required: true,
-  },
-  yearsRadar: {
+  accidents: {
     type: Array,
     required: true,
   },
 });
 
-watch(
-  () => props.yearsRadar,
-  (newVal, oldVal) => {
-    // Handle the changes to the prop here
-    d3.select(".radarChart").selectAll("*").remove();
-    var dataToDraw = [];
-    newVal.forEach((year) => {
-      const index = dataYears[year];
-      if (index !== undefined) dataToDraw.push(vizData[index]);
-      else console.error("Year not found in dataYears: ", year);
-    });
-    RadarChart(".radarChart", dataToDraw, radarChartOptions, props.yearsRadar);
-  }
-);
+function initialize() {
+  return new Promise((resolve) => {
+    initializeData([
+      props.accidents[0], // 2011
+      props.accidents[8], // 2019
+      props.accidents[11], // 2022
+    ]);
 
-onMounted(() => {
-  initialize();
-});
+    resolve([
+      () => {
+        d3.select(".radarChart").selectAll("*").remove();
+        RadarChart(".radarChart", [vizData[0]], radarChartOptions, ["2011"]);
+      },
+      () => {
+        d3.select(".radarChart").selectAll("*").remove();
+        RadarChart(".radarChart", [vizData[1]], radarChartOptions, ["2019"]);
+      },
+      () => {
+        d3.select(".radarChart").selectAll("*").remove();
+        RadarChart(".radarChart", [vizData[0], vizData[1]], radarChartOptions, [
+          "2011",
+          "2019",
+        ]);
+      },
+      () => {
+        d3.select(".radarChart").selectAll("*").remove();
+        RadarChart(".radarChart", [vizData[2]], radarChartOptions, ["2022"]);
+      },
+      () => {
+        d3.select(".radarChart").selectAll("*").remove();
+        RadarChart(".radarChart", [vizData[1], vizData[2]], radarChartOptions, [
+          "2019",
+          "2022",
+        ]);
+      },
+    ]);
+  }, {});
+}
 
-const initialize = () => {
+const initializeData = (yearData) => {
   var margin = { top: 200, right: 200, bottom: 200, left: 200 };
   var width =
     Math.min(1000, window.innerWidth - 10) - margin.left - margin.right;
@@ -54,11 +117,9 @@ const initialize = () => {
     window.innerHeight - margin.top - margin.bottom - 20
   );
 
-  props.accidentsRadar.forEach((file) => {
+  yearData.forEach((file) => {
     let data = file.reduce((acc, curr) => {
-      if (Object.values(curr)[8] !== "Montréal (06)") return acc;
       const currentMonth = curr.MS_ACCDN;
-
       const existingData = acc.find((item) => item.axis === currentMonth);
       if (existingData) {
         existingData.value += 1;
@@ -88,14 +149,9 @@ const initialize = () => {
   radarChartOptions = radarChartOptionsInit;
 
   var dataToDraw = [];
-  props.yearsRadar.forEach((year) => {
-    const index = dataYears[year];
-    if (index !== undefined) dataToDraw.push(vizData[index]);
-    else console.error("Year not found in dataYears: ", year);
-  });
-
+  dataToDraw.push(vizData[0]);
   // Call function to draw the Radar chart
-  RadarChart(".radarChart", dataToDraw, radarChartOptions, props.yearsRadar);
+  RadarChart(".radarChart", dataToDraw, radarChartOptions, ["2011"]);
 };
 
 /// ///////////////////////////////////////////////////////////
@@ -642,4 +698,6 @@ function RadarChart(id, data, options, years) {
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle");
 }
+
+defineExpose({ initialize });
 </script>

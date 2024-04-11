@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import stickyBits from "stickybits";
 import BarChart from "~/components/BarChart.vue";
 import Sankey from "~/components/Sankey.vue";
+import radarChart from "~/components/Radar.vue";
 
 defineOptions({
   name: "IndexPage",
@@ -12,12 +13,11 @@ const years = Array.from({ length: 12 }, (_, i) => i + 2011);
 
 const sankeyRef = ref<InstanceType<typeof Sankey>>();
 const barChartRef = ref<InstanceType<typeof BarChart>>();
+const radarRef = ref<InstanceType<typeof radarChart>>();
 
 const BASE_URL = import.meta.env.BASE_URL;
 
-const accidents: null | any = ref(null);
-const accidentsRadar: null | any = ref(null);
-const yearsRadar: null | any = ref(null);
+let accidents: null | any = null;
 const isLoading = ref(true);
 
 onMounted(async () => {
@@ -50,8 +50,9 @@ onMounted(async () => {
           Promise.all([
             sankeyRef.value!.initialize(),
             barChartRef.value!.initialize(),
-          ]).then(([c1, c2]) => {
-            scroller([c1, c2]).initialize();
+            radarRef.value!.initialize(),
+          ]).then(([c1, c2, c3]) => {
+            scroller([c1, c2, c3]).initialize();
           });
         });
       },
@@ -83,13 +84,8 @@ onMounted(async () => {
       <div v-if="!isLoading">
         <Sankey ref="sankeyRef" :accidents />
         <BarChart ref="barChartRef" :accidents />
+        <Radar ref="radarRef" :accidents />
       </div>
     </div>
   </div>
 </template>
-
-<style>
-.intro {
-  height: 100vh;
-}
-</style>
