@@ -264,22 +264,28 @@ defineExpose({ initialize })
       </div>
       <div v-if="showModal" class="modal-backdrop" @click="closeModal" />
       <div id="chartAll" class="chart" />
-      <div id="chartByYear" class="chart" style="display: none;">
+      <div id="chartByYear" class="chart" style="display: none; height: 600px; overflow-y: auto;">
         <div class="chart-row">
           <div id="chart2011" @click="showChart('chart2011')" />
           <div id="chart2012" @click="showChart('chart2012')" />
+        </div>
+        <div class="chart-row">
           <div id="chart2013" @click="showChart('chart2013')" />
           <div id="chart2014" @click="showChart('chart2014')" />
         </div>
         <div class="chart-row">
           <div id="chart2015" @click="showChart('chart2015')" />
           <div id="chart2016" @click="showChart('chart2016')" />
+        </div>
+        <div class="chart-row">
           <div id="chart2017" @click="showChart('chart2017')" />
           <div id="chart2018" @click="showChart('chart2018')" />
         </div>
         <div class="chart-row">
           <div id="chart2019" @click="showChart('chart2019')" />
           <div id="chart2020" @click="showChart('chart2020')" />
+        </div>
+        <div class="chart-row">
           <div id="chart2021" @click="showChart('chart2021')" />
           <div id="chart2022" @click="showChart('chart2022')" />
         </div>
@@ -362,5 +368,18 @@ defineExpose({ initialize })
   background: none;
   border: none;
   cursor: pointer;
+}
+
+#chartByYear::-webkit-scrollbar {
+  width: 10px;
+}
+
+#chartByYear::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+#chartByYear::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>
