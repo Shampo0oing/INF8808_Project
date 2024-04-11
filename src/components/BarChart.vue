@@ -82,16 +82,15 @@ function getDataForYear(year) {
 
 function processAccidentLabel(data) {
   const accidentTypes = [
-    { number: 11, label: 'Sèche' },
-    { number: 12, label: 'Mouillée' },
-    { number: 13, label: 'Accumulation d’eau (aquaplanage)' },
-    { number: 14, label: 'Sable, gravier sur la chaussée' },
-    { number: 15, label: 'Gadoue/neige fondante' },
-    { number: 16, label: 'Enneigée' },
-    { number: 17, label: 'Neige durcie' },
-    { number: 18, label: 'Glacée' },
-    { number: 19, label: 'Boueuse' },
-    { number: 20, label: 'Huileuse' },
+    { number: 11, label: 'Clair' },
+    { number: 12, label: 'Couvert' },
+    { number: 13, label: 'Brouillard' },
+    { number: 14, label: 'Pluie/bruine' },
+    { number: 15, label: 'Averse' },
+    { number: 16, label: 'Vent fort' },
+    { number: 17, label: 'Neige/grêle' },
+    { number: 18, label: 'Poudrerie' },
+    { number: 19, label: 'Verglas' },
     { number: 99, label: 'Autre' },
   ]
   data = Object.entries(data).map(([key, value]) => ({ type: key, count: value }))
@@ -113,11 +112,11 @@ function createBarChart() {
   // Create bar chart for each year
   years.forEach((year) => {
     const dataForYear = getDataForYear(year)
-    createBarChartForData(dataForYear, `#chart${year}`, year, 400, 300, true)
+    createBarChartForData(dataForYear, `#chart${year}`, year, 350, 300)
   })
 }
 
-function createBarChartForData(data, chartRef, year = '', maxwidth = 800, maxheight = 600, textanchor = false) {
+function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxheight = 550) {
   const margin = { top: 60, right: 20, bottom: 50, left: 100 }
   const width = maxwidth - margin.left - margin.right
   const height = maxheight - margin.top - margin.bottom
@@ -134,6 +133,11 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 800, maxhei
     .range([0, width])
     .padding(0.2)
 
+  // Define color scale
+  const color = d3.scaleOrdinal()
+    .domain(data.map(d => d.type))
+    .range(['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b'])
+
   const y = d3.scaleLinear()
     .domain([0, d3.max(data, d => d.count)])
     .range([height, 0])
@@ -146,7 +150,7 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 800, maxhei
     .attr('y', d => y(d.count))
     .attr('width', x.bandwidth())
     .attr('height', d => height - y(d.count))
-    .attr('fill', 'steelblue')
+    .attr('fill', d => color(d.type))
     .append('title')
     .text(d => `Type: ${d.type}\nNombre d'accidents: ${d.count}`)
 
@@ -164,19 +168,13 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 800, maxhei
     .attr('fill', 'black')
 
   // Add x-axis
-  const xAxis = svg.append('g')
+  svg.append('g')
     .attr('transform', `translate(0,${height})`)
     .call(d3.axisBottom(x))
-  if (textanchor === false) {
-    xAxis.selectAll('.tick text')
-      .call(wrap, x.bandwidth())
-  }
-  else {
-    xAxis.selectAll('.tick text')
-      .attr('transform', 'rotate(-45)')
-      .style('text-anchor', 'end')
-      .call(wrap, x.bandwidth())
-  }
+    .selectAll('.tick text')
+    .attr('transform', 'rotate(-45)')
+    .style('text-anchor', 'end')
+    .call(wrap, x.bandwidth())
 
   if (year !== '') {
     svg.append('text')
@@ -224,7 +222,7 @@ function showChart(chartId) {
     const year = chartId.replace('chart', '')
     const dataForChart = getDataForYear(year)
     d3.select('#chartModalContent').selectAll('*').remove()
-    createBarChartForData(dataForChart, '#chartModalContent', year, 800, 600)
+    createBarChartForData(dataForChart, '#chartModalContent', year, 700, 550)
   })
 }
 
@@ -237,20 +235,19 @@ defineExpose({ initialize })
 
 <template>
   <section class="viz-section">
-    <div class="steps">
+    <div class="steps" style="z-index: unset;">
       <section>
-        <h1>Title 1</h1>
-        <p>Text of section 1...</p>
+        <h1>La météo et les accidents : un éclairage surprenant </h1>
+        <p>Une nette prédominance des accidents survient sous des conditions météorologiques claires, totalisant 210 597 incidents.</p>
       </section>
       <section>
-        <p>Title 2</p>
+        <p>En revanche, les accidents survenant sous des conditions météorologiques plus adverses, telles que la pluie (23 421), la neige ou la grêle (17 748), les tempêtes de neige et le verglas (2 787 et 1 081 respectivement), affichent des chiffres sensiblement inférieurs.</p>
       </section>
       <section>
-        <p>Title 3</p>
+        <p>L'examen des données annuelles révèle  une prédominance marquée des accidents se produit sous des conditions météorologiques claires, avec des chiffres variant légèrement d'une année à l'autre mais restant significativement élevés. </p>
       </section>
       <section>
-        <h1>Title 4</h1>
-        <p>Text of section 4...</p>
+        <p> Ces constatations soulignent l'importance de la prudence et de l'adaptation du comportement de conduite, quelle que soit la météo, pour garantir la sécurité sur nos routes.</p>
       </section>
     </div>
     <div class="viz">
@@ -290,7 +287,7 @@ defineExpose({ initialize })
           <div id="chart2022" @click="showChart('chart2022')" />
         </div>
       </div>
-      <div v-if="showModal" id="chartModal" class="modal">
+      <div v-if="showModal" id="chartModal" class="modal" style="z-index: 9999;">
         <button class="close-button" @click="closeModal">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
             <line x1="18" y1="6" x2="6" y2="18" />
