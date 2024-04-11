@@ -1,10 +1,10 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import * as d3 from 'd3'
 import stickyBits from 'stickybits'
-import StackedBarplot from '~/components/StackedBarplot.vue'
 import BarChart from '~/components/BarChart.vue'
-import Sankey from '~/components/Sankey.vue'
 import type radarChart from '~/components/Radar.vue'
+import Sankey from '~/components/Sankey.vue'
+import StackedBarplot from '~/components/StackedBarplot.vue'
 
 defineOptions({
   name: 'IndexPage',
@@ -54,8 +54,9 @@ onMounted(async () => {
             sankeyRef.value!.initialize(),
             barChartRef.value!.initialize(),
             radarRef.value!.initialize(),
-          ]).then(([c1, c2, c3]) => {
-            scroller([c1, c2, c3]).initialize()
+            stackedBarplotRef.value!.initialize(),
+          ]).then(([c1, c2, c3, c4]) => {
+            scroller([c1, c2, c3, c4]).initialize()
           })
         })
       },
@@ -70,11 +71,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <!-- <div v-if="!isLoading"> -->
-  <!-- <VizTest :accidents /> -->
-  <!-- </div> -->
   <div>
-    <div relative>
+    <div relative flex flex-col>
       <section class="intro text-section">
         <h1>Page title</h1>
         <p>

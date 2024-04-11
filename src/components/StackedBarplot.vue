@@ -1,14 +1,28 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
-import type { StackedBarplotData } from '../models/types'
 import stackedDataJson from '../../public/data/StackedBarplot.json'
 
 const isTopData: null | any = ref(true)
 const configNo = ref(0)
-const vizText: string[] = ['plus', 'moins']
 const data = ref(getFilteredData(stackedDataJson.all, isTopData))
 
+function initialize() {
+  return new Promise((resolve) => {
+    createBarplot(configNo.value)
+
+    resolve([
+      () => console.warn(1),
+      () => console.warn(2),
+      () => console.warn(3),
+      () => { refreshData() },
+      () => { refreshData() },
+      () => { refreshData() },
+    ])
+  })
+}
+
 async function refreshData() {
+  // configNo.value = configParam
   configNo.value = (1 + configNo.value) % 3
   isTopData.value = configNo.value === 2 ? null : !isTopData.value
   if (configNo.value < 2)
@@ -22,10 +36,6 @@ async function refreshData() {
   if (divToSearch != null)
     createBarplot(configNo.value)
 }
-
-onMounted(() => {
-  createBarplot(configNo.value)
-})
 
 function createBarplot(vizNum: number) {
   const margin = { top: 10, right: 10, bottom: 30, left: 80 }
@@ -138,6 +148,8 @@ function createBarplot(vizNum: number) {
     .attr('y', 10)
     .text(d => d)
 }
+
+defineExpose({ initialize })
 </script>
 
 <template>
@@ -164,31 +176,32 @@ function createBarplot(vizNum: number) {
         </p>
       </section>
       <section>
-        <p v-if="configNo < 2">
-          Voici une visualisation des 4 états de surface de route causant le {{ vizText[configNo] }} d'accidents, ainsi que leur niveau de gravité
+        <p>
+          Voici une visualisation des 4 états de surface de route causant le plus d'accidents, ainsi que leur niveau de gravité
         </p>
-        <p v-else>
+      </section>
+      <section>
+        <p>
+          Voici une visualisation des 4 états de surface de route causant le moins d'accidents, ainsi que leur niveau de gravité
+        </p>
+      </section>
+      <section>
+        <p>
           Voici une visualisation comparant les accidents survenus sur chaussée sèche à ceux survenus sur d'autres types
           de revêtements de route. On remarque que le nombre d'accidents ainsi que leur gravité sont presque deux fois plus élevés
           lorsque la chaussée est sèche.
         </p>
-        <button
-          style="border-radius: 4px; background-color:lightblue; margin:10px; padding: 0 10px; height: 25px;"
-          @click="refreshData()"
-        >
-          Changer de vue
-        </button>
       </section>
     </div>
     <div v-if="configNo === 0" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
-    <div v-if="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
+    <div v-else-if="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
-    <div v-if="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
+    <div v-else-if="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
