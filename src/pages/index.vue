@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import * as d3 from 'd3'
 import stickyBits from 'stickybits'
+import StackedBarplot from '~/components/StackedBarplot.vue'
 import BarChart from '~/components/BarChart.vue'
 import Sankey from '~/components/Sankey.vue'
 import type radarChart from '~/components/Radar.vue'
@@ -13,6 +14,7 @@ const years = Array.from({ length: 12 }, (_, i) => i + 2011)
 
 const sankeyRef = ref<InstanceType<typeof Sankey>>()
 const barChartRef = ref<InstanceType<typeof BarChart>>()
+const stackedBarplotRef = ref<InstanceType<typeof StackedBarplot>>()
 const radarRef = ref<InstanceType<typeof radarChart>>()
 
 const BASE_URL = import.meta.env.BASE_URL
@@ -68,6 +70,9 @@ onMounted(async () => {
 </script>
 
 <template>
+  <!-- <div v-if="!isLoading"> -->
+  <!-- <VizTest :accidents /> -->
+  <!-- </div> -->
   <div>
     <div relative flex flex-col>
       <section class="intro text-section">
@@ -86,7 +91,14 @@ onMounted(async () => {
         <Sankey ref="sankeyRef" :accidents />
         <BarChart ref="barChartRef" :accidents />
         <Radar ref="radarRef" :accidents />
+        <StackedBarplot ref="stackedBarplotRef" />
       </div>
     </div>
   </div>
 </template>
+
+<style>
+.intro {
+  height: 100vh;
+}
+</style>
