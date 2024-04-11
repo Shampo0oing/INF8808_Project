@@ -72,6 +72,3 @@ export function getFilteredData(data: StackedBarplotData, isTopData: boolean): S
 
   return data
 }
-
-const stackedBarplotConfig = [0, 1, 2]
-export default stackedBarplotConfig

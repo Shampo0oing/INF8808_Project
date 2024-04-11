@@ -1,38 +1,46 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
 import type { StackedBarplotData } from '../models/types'
+import stackedDataJson from '../../public/data/StackedBarplot.json'
 
-const props = defineProps<{
-  dataMapped: StackedBarplotData
-  isTopData: boolean | null
-  configNo: number
-}>()
+const isTopData: null | any = ref(true)
+const configNo = ref(0)
+const vizText: string[] = ['plus', 'moins']
+const data = ref(getFilteredData(stackedDataJson.all, isTopData))
 
-let data: StackedBarplotData = {}
+async function refreshData() {
+  configNo.value = (1 + configNo.value) % 3
+  isTopData.value = configNo.value === 2 ? null : !isTopData.value
+  if (configNo.value < 2)
+    data.value = getFilteredData(stackedDataJson.all, isTopData.value)
 
-/// POUR AFFICHER LES 4 ÉTATS DE SURFACE DE ROUTE AVEC LE PLUS D'ACCIDENTS ///
-if (props.isTopData != null) {
-  data = getFilteredData(props.dataMapped, props.isTopData)
-}
-else {
-  /// COMPARAISON ÉTAT DE SURFACE DE SÈCHE VS TOUS LES AUTRES ///
-  data = props.dataMapped
+  if (isTopData.value == null)
+    data.value = stackedDataJson.regrouped
+
+  await nextTick()
+  const divToSearch = document.getElementById(`viz-6_${configNo.value}`)
+  if (divToSearch != null)
+    createBarplot(configNo.value)
 }
 
 onMounted(() => {
+  createBarplot(configNo.value)
+})
+
+function createBarplot(vizNum: number) {
   const margin = { top: 10, right: 10, bottom: 30, left: 80 }
   const width = 550 - margin.left - margin.right
   const height = 450 - margin.top - margin.bottom
 
-  const svg = d3.select(`#stacked_barplot${props.configNo}`)
+  const svg = d3.select(`#stacked_barplot${vizNum}`)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`)
 
-  const subgroups = Object.keys(data[Object.keys(data)[0]])
-  const groups = Object.keys(data)
+  const subgroups = Object.keys(data.value[Object.keys(data.value)[0]])
+  const groups = Object.keys(data.value)
 
   // X axis
   const x: any = d3.scaleBand()
@@ -47,7 +55,7 @@ onMounted(() => {
 
   // Y axis
   const y: any = d3.scaleLinear()
-    .domain([0, d3.max(Object.values(data).map(d => d3.sum(Object.values(d))))!])
+    .domain([0, d3.max(Object.values(data.value).map(d => d3.sum(Object.values(d))))!])
     .nice()
     .range([height, 0])
   svg.append('g')
@@ -59,10 +67,8 @@ onMounted(() => {
     .domain(subgroups)
     .range(Array.from({ length: subgroups.length }, (_, i) => d3.interpolateRainbow(i / subgroups.length)))
 
-  // stack per subgroup
-  const stackedData = d3.stack().keys(subgroups)(Object.values(data))
+  const stackedData = d3.stack().keys(subgroups)(Object.values(data.value))
 
-  // Show the bars
   svg.append('g')
     .selectAll('g')
     .data(stackedData)
@@ -83,11 +89,10 @@ onMounted(() => {
   // ----------------
   // TOOLTIP
   // ----------------
-  const tooltip = d3.select(`#viz-6_${props.configNo}`)
+  const tooltip = d3.select(`#viz-6_${vizNum}`)
     .insert('div', ':first-child')
-    .attr('class', `tooltip${props.configNo}`)
+    .attr('class', `tooltip${vizNum}`)
 
-  // Function to show tooltip
   function mouseover(event: any, d: any) {
     const targetElement = (event.target as any).__data__
     let subgroupName = ''
@@ -102,13 +107,11 @@ onMounted(() => {
       .style('opacity', 1)
   }
 
-  // Function to move tooltip
   function mousemove(event: any) {
     tooltip.style('left', `${event.pageX + 20}px`)
       .style('top', `${event.pageY + 20}px`)
   }
 
-  // Function to hide tooltip
   function mouseleave() {
     tooltip.style('opacity', 0)
   }
@@ -116,7 +119,7 @@ onMounted(() => {
   // ----------------
   // LEGEND
   // ----------------
-  const legend = d3.select(`#legend${props.configNo}`).append('svg').attr('width', '350px')
+  const legend = d3.select(`#legend${vizNum}`).append('svg').attr('width', '350px')
 
   const legendItems = legend.selectAll('.legend-item')
     .data(subgroups)
@@ -134,14 +137,62 @@ onMounted(() => {
     .attr('x', 20)
     .attr('y', 10)
     .text(d => d)
-})
+}
 </script>
 
 <template>
-  <div :id="`viz-6_${props.configNo}`" class="viz">
-    <div :id="`stacked_barplot${props.configNo}`" />
-    <div :id="`legend${props.configNo}`" />
-  </div>
+  <section class="viz-section">
+    <div class="steps">
+      <section>
+        <h1>L'état de la route, la cause des accidents ?</h1>
+        <p>
+          Dans le domaine de la sécurité routière, l'état de la chaussée joue un rôle primordial, influençant le nombre d'accidents.
+          Par exemple, lorsqu'elle est glissante en hiver, une route peut présenter des risques accrus de dérapage
+          ou d'accident, notamment en raison d'une adhérence réduite des pneus sur la surface.
+        </p>
+      </section>
+      <section>
+        <p>
+          Cependant, avec les données recueillies sur cette décennie dans la région montréalaise, on peut constater une incidence
+          beaucoup plus élevée d'accidents lorsque la route est sèche par rapport à d'autres conditions météorologiques.
+        </p>
+      </section>
+      <section>
+        <p>
+          En réalité, lorsque la surface de la route est sèche, les conducteurs peuvent être enclins à adopter une vitesse plus élevée,
+          à une distance de suivi plus courte et à une conduite plus agressive en général, ce qui accroît le risque d'accidents.
+        </p>
+      </section>
+      <section>
+        <p v-if="configNo < 2">
+          Voici une visualisation des 4 états de surface de route causant le {{ vizText[configNo] }} d'accidents, ainsi que leur niveau de gravité
+        </p>
+        <p v-else>
+          Voici une visualisation comparant les accidents survenus sur chaussée sèche à ceux survenus sur d'autres types
+          de revêtements de route. On remarque que le nombre d'accidents ainsi que leur gravité sont presque deux fois plus élevés
+          lorsque la chaussée est sèche.
+        </p>
+        <button
+          style="border-radius: 4px; background-color:lightblue; margin:10px; padding: 0 10px; height: 25px;"
+          @click="refreshData()"
+        >
+          Changer de vue
+        </button>
+      </section>
+    </div>
+    <div v-if="configNo === 0" :id="`viz-6_${configNo}`" class="viz">
+      <div :id="`stacked_barplot${configNo}`" />
+      <div :id="`legend${configNo}`" />
+    </div>
+    <div v-if="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
+      <div :id="`stacked_barplot${configNo}`" />
+      <div :id="`legend${configNo}`" />
+    </div>
+    <div v-if="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
+      <div :id="`stacked_barplot${configNo}`" />
+      <div :id="`legend${configNo}`" />
+    </div>
+  </section>
 </template>
 
 <style>
