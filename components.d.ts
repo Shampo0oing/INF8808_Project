@@ -5,14 +5,16 @@
 // Read more: https://github.com/vuejs/core/pull/3399
 export {}
 
-declare module 'vue' {
+declare module "vue" {
   export interface GlobalComponents {
-    Radar: typeof import('./src/components/Radar.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
-    TheCounter: typeof import('./src/components/TheCounter.vue')['default']
-    TheFooter: typeof import('./src/components/TheFooter.vue')['default']
-    TheInput: typeof import('./src/components/TheInput.vue')['default']
-    VizTest: typeof import('./src/components/VizTest.vue')['default']
+    BarChart: (typeof import("./src/components/BarChart.vue"))["default"];
+    Radar: (typeof import("./src/components/Radar.vue"))["default"];
+    RouterLink: (typeof import("vue-router"))["RouterLink"];
+    RouterView: (typeof import("vue-router"))["RouterView"];
+    Sankey: (typeof import("./src/components/Sankey.vue"))["default"];
+    TheCounter: (typeof import("./src/components/TheCounter.vue"))["default"];
+    TheFooter: (typeof import("./src/components/TheFooter.vue"))["default"];
+    TheInput: (typeof import("./src/components/TheInput.vue"))["default"];
+    VizTest: (typeof import("./src/components/VizTest.vue"))["default"];
   }
 }
