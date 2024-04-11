@@ -20,6 +20,8 @@ html {
   position: relative;
   min-height: 100%;
   font-family: $font-family;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -67,12 +69,18 @@ p {
 // ***** Main *****
 main {
   position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .text-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  min-height: 100vh;
   max-width: $text-max-width;
-  padding: $main-padding;
-  margin: 5em auto;
+  width: 100%;
   box-sizing: content-box;
 
   &.intro h1 {
@@ -88,11 +96,14 @@ main {
   position: relative;
   display: flex;
   padding: $main-padding;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 
   > .steps {
     padding-top: 50vh;
     padding-bottom: 50vh;
     flex-basis: 100% - $vis-width;
+    text-align: start;
 
     section p {
       color: $step-text-color;
@@ -166,3 +177,8 @@ main {
     font-size: $small-screen-base-font-size;
   }
 }
+
+// @keyframes scroll {
+//   0% { transform: translateY(0); }
+//   100% { transform: translateY(-100%); }
+// }

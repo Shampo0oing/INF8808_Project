@@ -69,7 +69,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <div relative>
+    <div relative flex flex-col>
       <section class="intro text-section">
         <h1>Page title</h1>
         <p>
