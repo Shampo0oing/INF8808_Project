@@ -79,13 +79,20 @@ onMounted(async () => {
       <section class="intro text-section">
         <h1>Page title</h1>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
+          La région métropolitaine de Montréal est confrontée chaque année à un
+          défi majeur en matière de sécurité routière. Un nombre significatif de
+          collisions impliquant des véhicules motorisés sont enregistrées
+          annuellement, entraînant des conséquences allant de simples dommages
+          matériels à des blessures graves, voire mortelles. Ces incidents
+          perturbent non seulement la fluidité du trafic, mais mettent également
+          en danger la sécurité des usagers de la route.
+
+          Dans notre démarche pour renforcer la sécurité routière et déterminer
+          les origines des accidents, nous nous engageons dans une analyse approfondie
+          des incidents afin de repérer les éléments pouvant impacter la sécurité
+          des routes. En améliorant notre compréhension des facteurs influençant
+          le comportement des conducteurs à Montréal, nous visons à accroître leur
+          sensibilisation pour rendre les routes de la ville plus sécurisées.
         </p>
       </section>
       <div v-if="!isLoading">
