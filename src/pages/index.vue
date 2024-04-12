@@ -2,11 +2,15 @@
 import stickyBits from 'stickybits'
 import Waffle from '~/components/Waffle.vue'
 import StackedBarplot from '~/components/StackedBarplot.vue'
+import TreeMap from '~/components/TreeMap.vue'
+import Radar from '~/components/Radar.vue'
 
 defineOptions({
   name: 'IndexPage',
 })
 
+const treeMapRef = ref<InstanceType<typeof TreeMap>>()
+const radarRef = ref<InstanceType<typeof Radar>>()
 const waffleRef = ref<InstanceType<typeof Waffle>>()
 const stackedBarplotRef = ref<InstanceType<typeof StackedBarplot>>()
 
@@ -19,10 +23,12 @@ onMounted(async () => {
 
   // Initializes the scroller and the visualizations.
   Promise.all([
-    stackedBarplotRef.value!.initialize(),
+    treeMapRef.value!.initialize(),
+    radarRef.value!.initialize(),
     waffleRef.value!.initialize(),
-  ]).then(([c1, c2]) => {
-    scroller([c1, c2]).initialize()
+    stackedBarplotRef.value!.initialize(),
+  ]).then(([c1, c2, c3, c4]) => {
+    scroller([c1, c2, c3, c4]).initialize()
   })
 })
 </script>
@@ -46,8 +52,10 @@ onMounted(async () => {
         <!-- <Sankey ref="sankeyRef" :accidents />
         <BarChart ref="barChartRef" :accidents />
         <Radar ref="radarRef" :accidents /> -->
-        <StackedBarplot ref="stackedBarplotRef" />
+        <TreeMap ref="treeMapRef" />
+        <Radar ref="radarRef" />
         <Waffle ref="waffleRef" />
+        <StackedBarplot ref="stackedBarplotRef" />
       </div>
     </div>
   </div>

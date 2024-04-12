@@ -1,0 +1,57 @@
+[
+  {
+    "name": "objet fixe",
+    "parent": "Origin",
+    "value": 30066,
+    "color": "#5FC5E0",
+    "percentage": "9.10%"
+  },
+  {
+    "name": "autre",
+    "parent": "Origin",
+    "value": 4699,
+    "color": "#f4f1de",
+    "percentage": "1.42%"
+  },
+  {
+    "name": "véhicule",
+    "parent": "Origin",
+    "value": 251404,
+    "color": "#e07a5f",
+    "percentage": "76.08%"
+  },
+  {
+    "name": "piéton",
+    "parent": "Origin",
+    "value": 14542,
+    "color": "#f2cc8f",
+    "percentage": "4.40%"
+  },
+  {
+    "name": "sans collision",
+    "parent": "Origin",
+    "value": 6745,
+    "color": "#85E05F",
+    "percentage": "2.04%"
+  },
+  {
+    "name": "cycliste",
+    "parent": "Origin",
+    "value": 9367,
+    "color": "#BA5FE0",
+    "percentage": "2.83%"
+  },
+  {
+    "name": "animal",
+    "parent": "Origin",
+    "value": 551,
+    "color": "#adb5bd",
+    "percentage": "0.17%"
+  },
+  {
+    "name": "Origin",
+    "parent": "",
+    "value": 0,
+    "percentage": "0.00%"
+  }
+]
