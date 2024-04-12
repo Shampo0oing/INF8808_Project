@@ -1,0 +1,117 @@
+{
+  "nodes": [
+    { "name": "Accident" },
+    { "name": "Jour" },
+    { "name": "Nuit" },
+    { "name": "Dommages matériels inférieurs au seuil de rapportage" },
+    { "name": "Industriel" },
+    { "name": "Commercial" },
+    { "name": "Dommages matériels seulement" },
+    { "name": "Autre" },
+    { "name": "Résidentiel" },
+    { "name": "Scolaire" },
+    { "name": "Léger" },
+    { "name": "Mortel ou grave" },
+    { "name": "Rural" }
+  ],
+  "links": [
+    { "source": "Accident", "target": "Jour", "value": 223851 },
+    { "source": "Accident", "target": "Nuit", "value": 85489 },
+    {
+      "source": "Jour",
+      "target": "Dommages matériels inférieurs au seuil de rapportage",
+      "value": 81542
+    },
+    {
+      "source": "Dommages matériels inférieurs au seuil de rapportage",
+      "target": "Industriel",
+      "value": 4868
+    },
+    {
+      "source": "Dommages matériels inférieurs au seuil de rapportage",
+      "target": "Commercial",
+      "value": 56757
+    },
+    {
+      "source": "Jour",
+      "target": "Dommages matériels seulement",
+      "value": 94286
+    },
+    {
+      "source": "Dommages matériels seulement",
+      "target": "Industriel",
+      "value": 11753
+    },
+    {
+      "source": "Nuit",
+      "target": "Dommages matériels seulement",
+      "value": 42124
+    },
+    {
+      "source": "Dommages matériels seulement",
+      "target": "Autre",
+      "value": 1730
+    },
+    {
+      "source": "Dommages matériels seulement",
+      "target": "Résidentiel",
+      "value": 43051
+    },
+    {
+      "source": "Dommages matériels seulement",
+      "target": "Commercial",
+      "value": 73729
+    },
+    {
+      "source": "Dommages matériels inférieurs au seuil de rapportage",
+      "target": "Scolaire",
+      "value": 2134
+    },
+    { "source": "Nuit", "target": "Léger", "value": 16600 },
+    { "source": "Léger", "target": "Commercial", "value": 32648 },
+    {
+      "source": "Dommages matériels inférieurs au seuil de rapportage",
+      "target": "Résidentiel",
+      "value": 39657
+    },
+    {
+      "source": "Nuit",
+      "target": "Dommages matériels inférieurs au seuil de rapportage",
+      "value": 25638
+    },
+    { "source": "Jour", "target": "Léger", "value": 46362 },
+    {
+      "source": "Dommages matériels inférieurs au seuil de rapportage",
+      "target": "Autre",
+      "value": 1935
+    },
+    { "source": "Léger", "target": "Autre", "value": 915 },
+    { "source": "Léger", "target": "Résidentiel", "value": 22915 },
+    { "source": "Nuit", "target": "Mortel ou grave", "value": 1127 },
+    { "source": "Mortel ou grave", "target": "Résidentiel", "value": 994 },
+    {
+      "source": "Dommages matériels seulement",
+      "target": "Rural",
+      "value": 4291
+    },
+    {
+      "source": "Dommages matériels seulement",
+      "target": "Scolaire",
+      "value": 1856
+    },
+    { "source": "Jour", "target": "Mortel ou grave", "value": 1661 },
+    { "source": "Mortel ou grave", "target": "Autre", "value": 81 },
+    { "source": "Léger", "target": "Scolaire", "value": 1314 },
+    { "source": "Mortel ou grave", "target": "Commercial", "value": 1406 },
+    {
+      "source": "Dommages matériels inférieurs au seuil de rapportage",
+      "target": "Rural",
+      "value": 1829
+    },
+    { "source": "Léger", "target": "Industriel", "value": 4023 },
+    { "source": "Mortel ou grave", "target": "Industriel", "value": 202 },
+    { "source": "Léger", "target": "Rural", "value": 1147 },
+    { "source": "Mortel ou grave", "target": "Rural", "value": 54 },
+    { "source": "Mortel ou grave", "target": "Scolaire", "value": 51 }
+  ]
+}
