@@ -16,7 +16,7 @@ function initialize() {
     const svg = d3
       .select(sankeyContainer.value)
       .append('svg')
-      .attr('width', 1500)
+      .attr('width', 1200)
       .attr('height', 1100)
 
     const tooltip = svg
@@ -30,7 +30,7 @@ function initialize() {
       .nodePadding(50)
       .extent([
         [50, 50],
-        [1200 - 100, 1000 - 10],
+        [1000 - 100, 700 - 10],
       ])
 
     const allData = props.accidents.flat()
@@ -68,10 +68,10 @@ function initialize() {
       const environmentMapping = {
         1: 'Scolaire',
         2: 'Résidentiel',
-        3: 'Affaires/commercial',
-        4: 'Industriel/Manufacturier',
+        3: 'Commercial',
+        4: 'Industriel',
         5: 'Rural',
-        6: 'Forestier',
+        6: 'Autre',
         9: 'Autre',
       }
 
@@ -151,15 +151,13 @@ function initialize() {
 
     sankeyLayout(data)
 
-    const xOffset = (1200 - Math.max(...data.nodes.map(d => d.x1))) / 2
-
     // Draw the nodes
     const node = svg
       .append('g')
       .selectAll('rect')
       .data(data.nodes)
       .join('rect')
-      .attr('x', d => d.x0 + xOffset)
+      .attr('x', d => d.x0)
       .attr('y', d => d.y0)
       .attr('height', d => d.y1 - d.y0)
       .attr('width', d => d.x1 - d.x0)
@@ -180,7 +178,7 @@ function initialize() {
       .selectAll('text')
       .data(data.nodes)
       .join('text')
-      .attr('x', d => (d.x0 + d.x1) / 2 + xOffset) // Position the label at the center of the node
+      .attr('x', d => (d.x0 + d.x1) / 2) // Position the label at the center of the node
       .attr('y', d => (d.y0 + d.y1) / 2) // Position the label at the center of the node
       .attr('dy', '0.35em') // Offset the text vertically for better alignment
       .text(d => d.name) // Set the text content to the node's name or value
@@ -193,7 +191,7 @@ function initialize() {
       .selectAll('text')
       .data(data.nodes)
       .join('text')
-      .attr('x', d => (d.x0 + d.x1) / 2 + xOffset) // Position the text at the center of the node with xOffset
+      .attr('x', d => (d.x0 + d.x1) / 2) // Position the text at the center of the node with xOffset
       .attr('y', d => (d.y0 + d.y1) / 2 + 20) // Position the text below the center of the node
       .attr('dy', '0.35em') // Offset the text vertically for better alignment
       .text(d => d.value) // Set the text content to the node value
@@ -212,12 +210,12 @@ function initialize() {
       .attr('d', sankeyLinkHorizontal())
       .attr('stroke', 'black')
       .attr('stroke-width', d => d.width)
-      .attr('transform', `translate(${xOffset}, 0)`)
+      // .attr("transform", `translate(${xOffset}, 0)`)
       .on('mouseover', (event, d) => {
         d3.select(event.target).attr('stroke', 'red')
         tooltip
           .style('opacity', 1)
-          .attr('x', (d.source.x1 + d.target.x0) / 2 + xOffset)
+          .attr('x', (d.source.x1 + d.target.x0) / 2)
           .attr('y', (d.y0 + d.y1) / 2)
           .text(`${d.value}`)
       })
