@@ -1,31 +1,16 @@
 <script setup>
 import * as d3 from 'd3'
+import barchartJson from '../../public/data/barchart.json'
 
-const props = defineProps({
-  accidents: {
-    type: Array,
-    required: true,
-  },
-})
+// create varialble data and get value from barchart.json
+const jsonData = ref(barchartJson)
 
 const activeTab = ref('all')
 const showModal = ref(false)
-const accidentCounts = ref(null)
 const years = Array.from({ length: 12 }, (_, i) => i + 2011)
-const yearsData = {}
 
 function initialize() {
   return new Promise((resolve) => {
-    accidentCounts.value = props.accidents.flat().reduce((acc, row, index) => {
-      const type = row.CD_COND_METEO
-      const year = years[index % years.length]
-      if (!acc[year])
-        acc[year] = {}
-
-      acc[year][type] = (acc[year][type] || 0) + 1
-      return acc
-    }, {})
-
     createBarChart()
 
     resolve([
@@ -58,50 +43,25 @@ function changeTab(tab) {
 }
 
 function getDataForYear(year) {
-  // check if data for the year is available from yearsData
-  if (yearsData[year])
-    return yearsData[year]
-
-  let data
   if (year === 'all') {
-    data = Object.values(accidentCounts.value).reduce((acc, yearData) => {
-      Object.entries(yearData).forEach(([type, count]) => {
-        acc[type] = (acc[type] || 0) + count
-      })
-      return acc
-    }, {})
+    const allYearsData = {}
+    for (const yearData of Object.values(jsonData.value)) {
+      for (const { type, count } of yearData)
+        allYearsData[type] = (allYearsData[type] || 0) + count
+    }
+    return Object.entries(allYearsData).map(([type, count]) => ({
+      type,
+      count,
+    }))
   }
-  else {
-    data = accidentCounts.value[year]
-  }
-  data = processAccidentLabel(data)
-  // store the data for the year in yearsData
-  yearsData[year] = data
-  return data
-}
-
-function processAccidentLabel(data) {
-  const accidentTypes = [
-    { number: 11, label: 'Clair' },
-    { number: 12, label: 'Couvert' },
-    { number: 13, label: 'Brouillard' },
-    { number: 14, label: 'Pluie/bruine' },
-    { number: 15, label: 'Averse' },
-    { number: 16, label: 'Vent fort' },
-    { number: 17, label: 'Neige/grêle' },
-    { number: 18, label: 'Poudrerie' },
-    { number: 19, label: 'Verglas' },
-    { number: 99, label: 'Autre' },
-  ]
-  data = Object.entries(data).map(([key, value]) => ({ type: key, count: value }))
-  data.forEach((d) => {
-    const type = accidentTypes.find(t => t.number.toString() === d.type)
-    if (type)
-      d.type = type.label
-    else
-      d.type = 'Non précisé'
+  const yearData = Object.values(jsonData.value[year]) || []
+  const formattedYearData = yearData.map(({ type, count }) => {
+    return {
+      type,
+      count,
+    }
   })
-  return data
+  return formattedYearData
 }
 
 function createBarChart() {
