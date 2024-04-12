@@ -5,6 +5,7 @@ import BarChart from '~/components/BarChart.vue'
 import type radarChart from '~/components/Radar.vue'
 import Sankey from '~/components/Sankey.vue'
 import StackedBarplot from '~/components/StackedBarplot.vue'
+import TreeMap from '~/components/TreeMap.vue'
 
 defineOptions({
   name: 'IndexPage',
@@ -16,6 +17,7 @@ const sankeyRef = ref<InstanceType<typeof Sankey>>()
 const barChartRef = ref<InstanceType<typeof BarChart>>()
 const stackedBarplotRef = ref<InstanceType<typeof StackedBarplot>>()
 const radarRef = ref<InstanceType<typeof radarChart>>()
+const treeMapRef = ref<InstanceType<typeof TreeMap>>()
 
 const BASE_URL = import.meta.env.BASE_URL
 
@@ -51,12 +53,13 @@ onMounted(async () => {
 
           // Initializes the scroller and the visualizations.
           Promise.all([
+            treeMapRef.value!.initialize(),
             sankeyRef.value!.initialize(),
             barChartRef.value!.initialize(),
             radarRef.value!.initialize(),
             stackedBarplotRef.value!.initialize(),
-          ]).then(([c1, c2, c3, c4]) => {
-            scroller([c1, c2, c3, c4]).initialize()
+          ]).then(([c1, c2, c3, c4, c5]) => {
+            scroller([c1, c2, c3, c4, c5]).initialize()
           })
         })
       },
@@ -86,6 +89,7 @@ onMounted(async () => {
         </p>
       </section>
       <div v-if="!isLoading">
+        <TreeMap ref="treeMapRef" />
         <Sankey ref="sankeyRef" :accidents />
         <BarChart ref="barChartRef" :accidents />
         <Radar ref="radarRef" :accidents />

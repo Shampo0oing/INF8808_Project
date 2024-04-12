@@ -193,15 +193,15 @@ defineExpose({ initialize })
         </p>
       </section>
     </div>
-    <div v-if="configNo === 0" :id="`viz-6_${configNo}`" class="viz">
+    <div v-show="configNo === 0" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
-    <div v-else-if="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
+    <div v-show="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
-    <div v-else-if="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
+    <div v-show="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
