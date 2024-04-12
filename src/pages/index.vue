@@ -1,9 +1,10 @@
 <script setup lang="ts" generic="T extends any, O extends any">
 import stickyBits from 'stickybits'
-import Waffle from '~/components/Waffle.vue'
+import Radar from '~/components/Radar.vue'
+import Sankey from '~/components/Sankey.vue'
 import StackedBarplot from '~/components/StackedBarplot.vue'
 import TreeMap from '~/components/TreeMap.vue'
-import Radar from '~/components/Radar.vue'
+import Waffle from '~/components/Waffle.vue'
 
 defineOptions({
   name: 'IndexPage',
@@ -13,6 +14,7 @@ const treeMapRef = ref<InstanceType<typeof TreeMap>>()
 const radarRef = ref<InstanceType<typeof Radar>>()
 const waffleRef = ref<InstanceType<typeof Waffle>>()
 const stackedBarplotRef = ref<InstanceType<typeof StackedBarplot>>()
+const sankeyRef = ref<InstanceType<typeof Sankey>>()
 
 onMounted(async () => {
   let elements: HTMLElement[] = [];
@@ -23,12 +25,13 @@ onMounted(async () => {
 
   // Initializes the scroller and the visualizations.
   Promise.all([
-    treeMapRef.value!.initialize(),
     radarRef.value!.initialize(),
+    treeMapRef.value!.initialize(),
     waffleRef.value!.initialize(),
+    sankeyRef.value!.initialize(),
     stackedBarplotRef.value!.initialize(),
-  ]).then(([c1, c2, c3, c4]) => {
-    scroller([c1, c2, c3, c4]).initialize()
+  ]).then(([c1, c2, c3, c4, c5]) => {
+    scroller([c1, c2, c3, c4, c5]).initialize()
   })
 })
 </script>
@@ -56,13 +59,12 @@ onMounted(async () => {
         </p>
       </section>
       <div>
-        <!-- <Sankey ref="sankeyRef" :accidents />
-        <BarChart ref="barChartRef" :accidents />
-        <Radar ref="radarRef" :accidents /> -->
-        <TreeMap ref="treeMapRef" />
         <Radar ref="radarRef" />
+        <TreeMap ref="treeMapRef" />
         <Waffle ref="waffleRef" />
+        <Sankey ref="sankeyRef" />
         <StackedBarplot ref="stackedBarplotRef" />
+        <!-- <BarChart ref="barChartRef" :accidents /> -->
       </div>
     </div>
   </div>

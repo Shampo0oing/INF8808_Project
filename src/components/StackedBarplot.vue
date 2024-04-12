@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as d3 from 'd3'
-import stackedDataJson from '../../public/data/StackedBarplot.json'
+import stackedDataJson from '~/data/stackedBarplot/StackedBarplot.json'
 
 const isTopData: null | any = ref(true)
 const configNo = ref(0)
@@ -204,27 +204,27 @@ defineExpose({ initialize })
         </p>
       </section>
     </div>
-    <div v-show="configNo === 0" :id="`viz-6_${configNo}`" class="viz">
+    <div v-if="configNo === 0" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
-    <div v-show="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
+    <div v-else-if="configNo === 1" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
-    <div v-show="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
+    <div v-else-if="configNo === 2" :id="`viz-6_${configNo}`" class="viz">
       <div :id="`stacked_barplot${configNo}`" />
       <div :id="`legend${configNo}`" />
     </div>
   </section>
 </template>
 
-<style>
-  div[id^='viz'] {
+<style scoped>
+div[id^='viz'] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   position: sticky;
 }
 div[id^='legend'] {

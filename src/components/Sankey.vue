@@ -1,7 +1,7 @@
 <script setup>
 import * as d3 from 'd3'
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey'
-import chartData from '../../public/data/Sankey.json'
+import chartData from '~/data/sankey/Sankey.json'
 
 /* const props = defineProps({
   accidents: {

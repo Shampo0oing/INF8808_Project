@@ -1,93 +1,93 @@
 <script setup>
 import * as d3 from 'd3'
+import waffleData from '~/data/waffle/Types_Vehicules.json'
 
 function initialize() {
   return new Promise((resolve) => {
-    const BASE_URL = import.meta.env.BASE_URL
-    d3.json(`${BASE_URL}data/Types_Vehicules.json`).then((data) => {
-      const waffle = d3.select('.waffle')
-      const numbers = d3.range(400)
+    const waffle = d3.select('.waffle')
+    const numbers = d3.range(400)
 
-      function setWaffle() {
+    const data = waffleData
+
+    function setWaffle() {
+      waffle
+        .selectAll('.block')
+        .data(numbers)
+        .enter()
+        .append('div')
+        .attr('class', 'block')
+        .style('background-color', '#CCCCCC')
+    }
+
+    setWaffle()
+
+    resolve([
+      () => {
+        waffle.selectAll('.block').remove()
+        setWaffle()
+      },
+      () => {
         waffle
           .selectAll('.block')
-          .data(numbers)
-          .enter()
-          .append('div')
-          .attr('class', 'block')
-          .style('background-color', '#CCCCCC')
-      }
+          .filter(
+            (d, i) => i >= data[2].value + data[3].value + data[4].value,
+          )
+          .remove()
 
-      setWaffle()
+        setWaffle()
 
-      resolve([
-        () => {
-          waffle.selectAll('.block').remove()
-          setWaffle()
-        },
-        () => {
-          waffle
-            .selectAll('.block')
-            .filter(
-              (d, i) => i >= data[2].value + data[3].value + data[4].value,
-            )
-            .remove()
+        waffle
+          .selectAll('.block')
+          .filter((d, i) => i < data[4].value)
+          .transition()
+          .delay((d, i) => i * 20)
+          .style('background-color', '#FE4A49')
 
-          setWaffle()
+        waffle
+          .selectAll('.block')
+          .filter(
+            (d, i) => i >= data[4].value && i < data[3].value + data[4].value,
+          )
+          .transition()
+          .delay((d, i) => i * 20 + data[4].value * 20)
+          .style('background-color', '#FFC107')
 
-          waffle
-            .selectAll('.block')
-            .filter((d, i) => i < data[4].value)
-            .transition()
-            .delay((d, i) => i * 20)
-            .style('background-color', '#FE4A49')
+        waffle
+          .selectAll('.block')
+          .filter(
+            (d, i) =>
+              i >= data[3].value + data[4].value
+              && i < data[2].value + data[3].value + data[4].value,
+          )
+          .transition()
+          .delay((d, i) => i * 20 + (data[3].value + data[4].value) * 20)
+          .style('background-color', '#4CAF50')
+      },
+      () => {
+        waffle
+          .selectAll('.block')
+          .filter(
+            (d, i) =>
+              i >= data[2].value + data[3].value + data[4].value
+              && i
+              < data[1].value + data[2].value + data[3].value + data[4].value,
+          )
+          .transition()
+          .delay((d, i) => i * 5)
+          .style('background-color', '#2196F3')
 
-          waffle
-            .selectAll('.block')
-            .filter(
-              (d, i) => i >= data[4].value && i < data[3].value + data[4].value,
-            )
-            .transition()
-            .delay((d, i) => i * 20 + data[4].value * 20)
-            .style('background-color', '#FFC107')
-
-          waffle
-            .selectAll('.block')
-            .filter(
-              (d, i) =>
-                i >= data[3].value + data[4].value
-                && i < data[2].value + data[3].value + data[4].value,
-            )
-            .transition()
-            .delay((d, i) => i * 20 + (data[3].value + data[4].value) * 20)
-            .style('background-color', '#4CAF50')
-        },
-        () => {
-          waffle
-            .selectAll('.block')
-            .filter(
-              (d, i) =>
-                i >= data[2].value + data[3].value + data[4].value
-                && i
-                < data[1].value + data[2].value + data[3].value + data[4].value,
-            )
-            .transition()
-            .delay((d, i) => i * 5)
-            .style('background-color', '#2196F3')
-
-          waffle
-            .selectAll('.block')
-            .filter(
-              (d, i) =>
-                i
-                >= data[1].value + data[2].value + data[3].value + data[4].value,
-            )
-            .transition()
-            .delay((d, i) => i * 5 + data[1].value * 5)
-            .style('background-color', '#9C27B0')
-        },
-      ])
-    })
+        waffle
+          .selectAll('.block')
+          .filter(
+            (d, i) =>
+              i
+              >= data[1].value + data[2].value + data[3].value + data[4].value,
+          )
+          .transition()
+          .delay((d, i) => i * 5 + data[1].value * 5)
+          .style('background-color', '#9C27B0')
+      },
+    ])
   })
 }
 

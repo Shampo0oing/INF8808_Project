@@ -1,52 +1,51 @@
 <script setup>
 import * as d3 from 'd3'
+import radarChart from '~/data/radar/Radar.json'
 
 let radarChartOptions = {}
 
 function initialize() {
   return new Promise((resolve) => {
     initializeData()
-    const BASE_URL = import.meta.env.BASE_URL
-    d3.json(`${BASE_URL}data/Radar.json`).then((data) => {
-      resolve([
-        () => {
-          d3.select('.radarChart').selectAll('*').remove()
-          RadarChart('.radarChart', [data['2011']], radarChartOptions, [
-            '2011',
-          ])
-        },
-        () => {
-          d3.select('.radarChart').selectAll('*').remove()
-          RadarChart('.radarChart', [data['2019']], radarChartOptions, [
-            '2019',
-          ])
-        },
-        () => {
-          d3.select('.radarChart').selectAll('*').remove()
-          RadarChart(
-            '.radarChart',
-            [data['2011'], data['2019']],
-            radarChartOptions,
-            ['2011', '2019'],
-          )
-        },
-        () => {
-          d3.select('.radarChart').selectAll('*').remove()
-          RadarChart('.radarChart', [data['2022']], radarChartOptions, [
-            '2022',
-          ])
-        },
-        () => {
-          d3.select('.radarChart').selectAll('*').remove()
-          RadarChart(
-            '.radarChart',
-            [data['2019'], data['2022']],
-            radarChartOptions,
-            ['2019', '2022'],
-          )
-        },
-      ])
-    })
+    const data = radarChart
+    resolve([
+      () => {
+        d3.select('.radarChart').selectAll('*').remove()
+        RadarChart('.radarChart', [data['2011']], radarChartOptions, [
+          '2011',
+        ])
+      },
+      () => {
+        d3.select('.radarChart').selectAll('*').remove()
+        RadarChart('.radarChart', [data['2019']], radarChartOptions, [
+          '2019',
+        ])
+      },
+      () => {
+        d3.select('.radarChart').selectAll('*').remove()
+        RadarChart(
+          '.radarChart',
+          [data['2011'], data['2019']],
+          radarChartOptions,
+          ['2011', '2019'],
+        )
+      },
+      () => {
+        d3.select('.radarChart').selectAll('*').remove()
+        RadarChart('.radarChart', [data['2022']], radarChartOptions, [
+          '2022',
+        ])
+      },
+      () => {
+        d3.select('.radarChart').selectAll('*').remove()
+        RadarChart(
+          '.radarChart',
+          [data['2019'], data['2022']],
+          radarChartOptions,
+          ['2019', '2022'],
+        )
+      },
+    ])
   }, {})
 }
 
