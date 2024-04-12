@@ -1,56 +1,56 @@
 <script setup>
 import * as d3 from 'd3'
 
-const props = defineProps({
-  accidents: {
-    type: Array,
-    required: true,
-  },
-})
-
 let radarChartOptions = {}
-const vizData = []
 
 function initialize() {
   return new Promise((resolve) => {
-    initializeData([
-      props.accidents[0], // 2011
-      props.accidents[8], // 2019
-      props.accidents[11], // 2022
-    ])
-
-    resolve([
-      () => {
-        d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [vizData[0]], radarChartOptions, ['2011'])
-      },
-      () => {
-        d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [vizData[1]], radarChartOptions, ['2019'])
-      },
-      () => {
-        d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [vizData[0], vizData[1]], radarChartOptions, [
-          '2011',
-          '2019',
-        ])
-      },
-      () => {
-        d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [vizData[2]], radarChartOptions, ['2022'])
-      },
-      () => {
-        d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [vizData[1], vizData[2]], radarChartOptions, [
-          '2019',
-          '2022',
-        ])
-      },
-    ])
+    initializeData()
+    const BASE_URL = import.meta.env.BASE_URL
+    d3.json(`${BASE_URL}data/Radar.json`).then((data) => {
+      resolve([
+        () => {
+          d3.select('.radarChart').selectAll('*').remove()
+          RadarChart('.radarChart', [data['2011']], radarChartOptions, [
+            '2011',
+          ])
+        },
+        () => {
+          d3.select('.radarChart').selectAll('*').remove()
+          RadarChart('.radarChart', [data['2019']], radarChartOptions, [
+            '2019',
+          ])
+        },
+        () => {
+          d3.select('.radarChart').selectAll('*').remove()
+          RadarChart(
+            '.radarChart',
+            [data['2011'], data['2019']],
+            radarChartOptions,
+            ['2011', '2019'],
+          )
+        },
+        () => {
+          d3.select('.radarChart').selectAll('*').remove()
+          RadarChart('.radarChart', [data['2022']], radarChartOptions, [
+            '2022',
+          ])
+        },
+        () => {
+          d3.select('.radarChart').selectAll('*').remove()
+          RadarChart(
+            '.radarChart',
+            [data['2019'], data['2022']],
+            radarChartOptions,
+            ['2019', '2022'],
+          )
+        },
+      ])
+    })
   }, {})
 }
 
-function initializeData(yearData) {
+function initializeData() {
   const margin = { top: 200, right: 200, bottom: 200, left: 200 }
   const width
     = Math.min(1000, window.innerWidth - 10) - margin.left - margin.right
@@ -58,29 +58,6 @@ function initializeData(yearData) {
     width,
     window.innerHeight - margin.top - margin.bottom - 20,
   )
-
-  yearData.forEach((file) => {
-    let data = file.reduce((acc, curr) => {
-      const currentMonth = curr.MS_ACCDN
-      const existingData = acc.find(item => item.axis === currentMonth)
-      if (existingData) {
-        existingData.value += 1
-      }
-      else if (currentMonth) {
-        acc.push({
-          axis: currentMonth,
-          value: 1,
-        })
-      }
-      return acc
-    }, [])
-    data = data.sort(
-      (a, b) => Number.parseInt(a.axis) - Number.parseInt(b.axis),
-    )
-    data.push(data[0])
-    vizData.push(data)
-  })
-
   const color = d3.scaleOrdinal().range(['#7857AD', '#EDC951'])
   const radarChartOptionsInit = {
     w: width,
@@ -92,11 +69,6 @@ function initializeData(yearData) {
     color,
   }
   radarChartOptions = radarChartOptionsInit
-
-  const dataToDraw = []
-  dataToDraw.push(vizData[0])
-  // Call function to draw the Radar chart
-  RadarChart('.radarChart', dataToDraw, radarChartOptions, ['2011'])
 }
 
 /// ///////////////////////////////////////////////////////////
