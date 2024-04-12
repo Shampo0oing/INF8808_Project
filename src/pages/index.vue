@@ -43,7 +43,7 @@ onMounted(async () => {
   <div>
     <div relative flex flex-col>
       <section class="intro text-section">
-        <h1>Page title</h1>
+        <h1>Projet INF8808</h1>
         <p>
           La région métropolitaine de Montréal est confrontée chaque année à un
           défi majeur en matière de sécurité routière. Un nombre significatif de

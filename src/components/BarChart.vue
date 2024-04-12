@@ -261,6 +261,10 @@ defineExpose({ initialize })
 </template>
 
 <style scoped>
+.viz {
+  flex-direction: column;
+}
+
 #chartAll {
   display: flex;
   justify-content: center;
