@@ -1,12 +1,12 @@
 <script setup>
-import * as d3 from 'd3';
-import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json';
-import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json';
+import * as d3 from 'd3'
+import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
+import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
 
 const defaultData = jsonDefaultData
 const seriousData = jsonSeriousData
 
-const initialize = () => {
+function initialize() {
   return new Promise((resolve) => {
     // preProcess()
     createTreeMap(defaultData)
@@ -16,7 +16,8 @@ const initialize = () => {
         console.warn(1)
       },
       (direction) => {
-        if (direction === 'up') refreshData(defaultData)
+        if (direction === 'up')
+          refreshData(defaultData)
       },
       () => refreshData(seriousData),
     ])
@@ -108,8 +109,7 @@ const initialize = () => {
 //   }, [])
 // }
 
-const createTreeMap = (data) => {
-
+function createTreeMap(data) {
   // set the dimensions and margins of the graph
   const margin = { top: 10, right: 10, bottom: 10, left: 10 }
   const width = 445 - margin.left - margin.right
@@ -173,7 +173,7 @@ const createTreeMap = (data) => {
     .attr('y', (d, i) => i * 40) // 20 is the distance between each rectangle
     .attr('width', 20)
     .attr('height', 20)
-    .style('fill', (d) => d.color)
+    .style('fill', d => d.color)
     .style('stroke', 'black') // Add a black outline
 
   // Append text for each color
@@ -182,13 +182,12 @@ const createTreeMap = (data) => {
     .join('text')
     .attr('x', 30) // 15 is the distance from the rectangle
     .attr('y', (d, i) => i * 40 + 15) // 9 is the vertical alignment of the text
-    .text((d) => `${d.name.charAt(0).toUpperCase() + d.name.slice(1)} (${d.percentage})`) // Show the value next to the key
+    .text(d => `${d.name.charAt(0).toUpperCase() + d.name.slice(1)} (${d.percentage})`) // Show the value next to the key
     .attr('font-size', '16px')
 }
 
-const refreshData = async (data) => {
-
-  d3.select('#treeMap svg').remove();
+async function refreshData(data) {
+  d3.select('#treeMap svg').remove()
 
   await nextTick()
 
@@ -201,7 +200,7 @@ defineExpose({ initialize })
 </script>
 
 <template>
-    <section class="viz-section">
+  <section class="viz-section">
     <div class="steps">
       <section>
         <h1>Une variété d'accident.</h1>

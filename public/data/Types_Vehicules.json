@@ -1,0 +1,7 @@
+[
+  { "attribute": "AUTO_CAMION_LEGER", "value": 317 },
+  { "attribute": "VEH_LOURD", "value": 53 },
+  { "attribute": "MOTO_CYCLO", "value": 6 },
+  { "attribute": "VELO", "value": 11 },
+  { "attribute": "PIETON", "value": 13 }
+]
