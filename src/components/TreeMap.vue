@@ -1,7 +1,7 @@
 <script setup>
 import * as d3 from 'd3'
-import jsonDefaultData from '~/data/treeMap/TreeMapDefault.json'
-import jsonSeriousData from '~/data/treeMap/TreeMapSerious.json'
+import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
+import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
 
 const defaultData = jsonDefaultData
 const seriousData = jsonSeriousData

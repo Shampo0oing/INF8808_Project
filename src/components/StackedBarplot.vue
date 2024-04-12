@@ -219,7 +219,7 @@ defineExpose({ initialize })
   </section>
 </template>
 
-<style scoped>
+<style>
 div[id^='viz'] {
   display: flex;
   flex-direction: column;
