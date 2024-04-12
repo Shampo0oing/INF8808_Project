@@ -1,6 +1,6 @@
 <script setup>
 import * as d3 from 'd3'
-import barchartJson from '../../public/data/barchart.json'
+import barchartJson from '~/data/barChart/barchart.json'
 
 // create varialble data and get value from barchart.json
 const jsonData = ref(barchartJson)
