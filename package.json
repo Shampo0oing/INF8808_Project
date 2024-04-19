@@ -13,6 +13,7 @@
     "postinstall": "npx simple-git-hooks"
   },
   "dependencies": {
+    "@rollup/rollup-win32-ia32-msvc": "^4.14.3",
     "@vueuse/core": "^10.9.0",
     "d3": "^7.9.0",
     "d3-sankey": "^0.12.3",

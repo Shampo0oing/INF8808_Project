@@ -11,15 +11,11 @@ function initialize() {
     resolve([
       () => {
         d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [data['2011']], radarChartOptions, [
-          '2011',
-        ])
+        RadarChart('.radarChart', [data['2011']], radarChartOptions, ['2011'])
       },
       () => {
         d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [data['2019']], radarChartOptions, [
-          '2019',
-        ])
+        RadarChart('.radarChart', [data['2019']], radarChartOptions, ['2019'])
       },
       () => {
         d3.select('.radarChart').selectAll('*').remove()
@@ -32,9 +28,7 @@ function initialize() {
       },
       () => {
         d3.select('.radarChart').selectAll('*').remove()
-        RadarChart('.radarChart', [data['2022']], radarChartOptions, [
-          '2022',
-        ])
+        RadarChart('.radarChart', [data['2022']], radarChartOptions, ['2022'])
       },
       () => {
         d3.select('.radarChart').selectAll('*').remove()
@@ -57,7 +51,7 @@ function initializeData() {
     width,
     window.innerHeight - margin.top - margin.bottom - 20,
   )
-  const color = d3.scaleOrdinal().range(['#7857AD', '#EDC951'])
+  const color = d3.scaleOrdinal().range(['#858581'])
   const radarChartOptionsInit = {
     w: width,
     h: height,
@@ -81,7 +75,7 @@ function RadarChart(id, data, options, years) {
     margin: { top: 20, right: 20, bottom: 20, left: 20 }, // The margins of the SVG
     levels: 3, // How many levels or inner circles should there be drawn
     maxValue: 0, // What is the value that the biggest circle will represent
-    labelFactor: 1.25, // How much farther than the radius of the outer circle should the labels be placed
+    labelFactor: 1.4, // How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 60, // The number of pixels after which a label needs to be given a new line
     opacityArea: 0.35, // The opacity of the area of the blob
     dotRadius: 5, // The size of the colored circles of each blog
@@ -164,9 +158,6 @@ function RadarChart(id, data, options, years) {
       `translate(${cfg.w / 2 + cfg.margin.left},${cfg.h / 2 + cfg.margin.top})`,
     )
 
-  // Set up the small tooltip for when you hover over a circle
-  const tooltip = g.append('text').attr('class', 'tooltip').style('opacity', 0)
-
   // Wrapper for the grid & axes
   const axisGrid = g.append('g').attr('class', 'axisWrapper')
 
@@ -181,25 +172,25 @@ function RadarChart(id, data, options, years) {
       name: 'Hiver',
       start: { month: 2, day: 20 },
       end: { month: 5, day: 21 },
-      color: '#7DDFFF',
+      color: '#00a2ff',
     },
     {
       name: 'Printemps',
       start: { month: 5, day: 21 },
       end: { month: 8, day: 23 },
-      color: '#8AFE8A',
+      color: '#00ff1a',
     },
     {
       name: 'Été',
       start: { month: 8, day: 23 },
       end: { month: 11, day: 21 },
-      color: '#FF8A74',
+      color: '#ff401c',
     },
     {
       name: 'Automne',
       start: { month: 11, day: 21 },
       end: { month: 14, day: 20 },
-      color: '#FCCA72',
+      color: '#ffb32e',
     },
   ]
 
@@ -216,6 +207,33 @@ function RadarChart(id, data, options, years) {
       .attr('d', arc)
       .style('fill', season.color)
       .style('opacity', 0.5)
+  })
+
+  // Append labels for each season
+  seasons.forEach((season) => {
+    const startAngle
+      = ((season.start.month + season.start.day / 31) * Math.PI) / 6
+      - Math.PI / 2
+    const endAngle
+      = ((season.end.month + season.end.day / 31) * Math.PI) / 6 - Math.PI / 2
+    const midAngle = (startAngle + endAngle) / 2
+
+    const labelRadius = radius * 1.15 // Adjust this value for label position
+
+    const labelX = labelRadius * Math.cos(midAngle)
+    const labelY = labelRadius * Math.sin(midAngle)
+
+    // Append labels for each season
+    axisGrid
+      .append('text')
+      .attr('class', 'seasonLabel')
+      .attr('x', labelX)
+      .attr('y', labelY)
+      .text(season.name)
+      .style('font-family', 'Impact')
+      .style('font-size', '13px')
+      .attr('text-anchor', 'middle')
+      .attr('alignment-baseline', 'middle')
   })
 
   /// //////////////////////////////////////////////////////
@@ -286,7 +304,8 @@ function RadarChart(id, data, options, years) {
   axis
     .append('text')
     .attr('class', 'legend')
-    .style('font-size', '11px')
+    .style('font-size', '13px')
+    .style('font-weight', 'bold')
     .attr('text-anchor', 'middle')
     .attr('dy', '0.35em')
     .attr('x', (_, i) => {
@@ -395,16 +414,41 @@ function RadarChart(id, data, options, years) {
     .attr('cy', (d, i) => {
       return rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2)
     })
-    .style('fill', (_, __, j) => {
-      if (data.length === 1) {
-        // Always use the same color when there's only one dataset
-        return cfg.color(0)
-      }
-      else {
-        // Use different colors for each dataset when there are multiple datasets
-        return cfg.color(j)
-      }
+    .style('fill', (_, __, ___) => {
+      return cfg.color(0)
     })
+
+  /// //////////////////////////////////////////////////////
+  /// /////////// Append the year labels ///////////////////
+  /// //////////////////////////////////////////////////////
+
+  // Iterate through each dataset and append the year label
+  data.forEach((dataset, index) => {
+    const minIndex = dataset.findIndex(
+      d => d.value === d3.min(dataset, d => d.value),
+    )
+
+    const minCirclePosition = {
+      x:
+        rScale(dataset[minIndex].value)
+        * Math.cos(angleSlice * minIndex - Math.PI / 2),
+      y:
+        rScale(dataset[minIndex].value)
+        * Math.sin(angleSlice * minIndex - Math.PI / 2),
+    }
+
+    // Append the year label for each dataset
+    g.append('text')
+      .attr('class', 'yearLabel')
+      .attr('x', minCirclePosition.x + 10)
+      .attr('y', minCirclePosition.y)
+      .text(years[index]) // Use the year corresponding to the current dataset
+      .style('font-family', 'Impact')
+      .style('font-size', '12px')
+      .style('fill', '#000')
+      .attr('text-anchor', 'start')
+      .attr('alignment-baseline', 'middle')
+  })
 
   /// //////////////////////////////////////////////////////
   /// ///// Append invisible circles for tooltip ///////////
@@ -416,6 +460,13 @@ function RadarChart(id, data, options, years) {
     .data(data)
     .join('g')
     .attr('class', 'radarCircleWrapper')
+
+  // Set up the small tooltip for when you hover over a circle
+  const tooltip = g
+    .append('text')
+    .attr('class', 'tooltip')
+    .style('opacity', 0)
+    .raise()
 
   // Append a set of invisible circles on top for the mouseover pop-up
   blobCircleWrapper
@@ -446,9 +497,25 @@ function RadarChart(id, data, options, years) {
         .transition()
         .duration(200)
         .style('opacity', 1)
+
+      // Dim all circles except the one being hovered over
+      d3.selectAll('.radarCircle').classed('dimmed', (circleData) => {
+        return circleData !== d
+      })
+
+      // Dim axis values and radar stroke
+      d3.selectAll('.axisLabel').classed('dimmed', true)
+      d3.selectAll('.radarStroke').classed('dimmed', true)
     })
     .on('mouseout', () => {
       tooltip.transition().duration(200).style('opacity', 0)
+
+      // Restore the opacity of all circles
+      d3.selectAll('.radarCircle').classed('dimmed', false)
+
+      // Restore axis values and radar stroke opacity
+      d3.selectAll('.axisLabel').classed('dimmed', false)
+      d3.selectAll('.radarStroke').classed('dimmed', false)
     })
 
   /// //////////////////////////////////////////////////////
@@ -499,119 +566,6 @@ function RadarChart(id, data, options, years) {
       }
     })
   } // wrap
-
-  /////////////////////////////////////////////////////////
-  /// //////////////// Draw the Legend /////////////////////
-  /////////////////////////////////////////////////////////
-  // create a list of keys
-  const keys = ['Hiver', 'Printemps', 'Été', 'Automne']
-
-  // Usually you have a color scale in your chart already
-  const colorSeasons = d3
-    .scaleOrdinal()
-    .range(['#7DDFFF', '#8AFE8A', '#FF8A74', '#FCCA72'])
-  const colorYears = d3.scaleOrdinal().range(['#7857AD', '#EDC951'])
-
-  // Add one dot in the legend for each name.
-  const size = 20
-
-  // Append a rectangle as the background for the legend items
-  svg
-    .append('rect')
-    .attr('x', 1) // Adjust x position according to your needs
-    .attr('y', 20) // Adjust y position according to your needs
-    .attr('width', 210) // Adjust width according to your needs
-    .attr('height', 160) // Adjust height according to your needs
-    .style('fill', 'none') // Set fill to none to make it transparent
-    .style('stroke', 'black') // Set stroke color to black
-  /// //////////////// Title Legend /////////////////////////
-  svg
-    .selectAll('mylabels')
-    .data(['Légende'])
-    .enter()
-    .append('text')
-    .style('font-weight', 'bold')
-    .attr('x', 50 + size)
-    .attr('y', (_, i) => {
-      return 30 + i * (size + 5) + size / 2
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .text((d) => {
-      return d
-    })
-    .attr('text-anchor', 'left')
-    .style('alignment-baseline', 'middle')
-    .style('text-decoration', 'underline')
-
-  /// //////////////// years dots /////////////////////////
-  svg
-    .selectAll('mydots')
-    .data(years)
-    .enter()
-    .append('circle')
-    .attr('cx', 150)
-    .attr('cy', (_, i) => {
-      return 78 + i * (size + 5)
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr('r', (size - 5) / 2)
-    .style('fill', (d) => {
-      return colorYears(d)
-    })
-
-  /// //////////////// years labels /////////////////////////
-  // Add one dot in the legend for each name.
-  svg
-    .selectAll('mylabels')
-    .data(years)
-    .enter()
-    .append('text')
-    .attr('x', 142 + size)
-    .attr('y', (_, i) => {
-      return 70 + i * (size + 5) + size / 2
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .style('fill', (d) => {
-      return colorYears(d)
-    })
-    .text((d) => {
-      return d
-    })
-    .attr('text-anchor', 'left')
-    .style('alignment-baseline', 'middle')
-
-  /// //////////////// seasons squares /////////////////////////
-  svg
-    .selectAll('mydots')
-    .data(keys)
-    .enter()
-    .append('rect')
-    .attr('x', 15)
-    .attr('y', (_, i) => {
-      return 70 + i * (size + 5)
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .attr('width', size)
-    .attr('height', size)
-    .style('fill', (d) => {
-      return colorSeasons(d)
-    })
-
-  /// //////////////// seasons labels /////////////////////////
-  // Add one dot in the legend for each name.
-  svg
-    .selectAll('mylabels')
-    .data(keys)
-    .enter()
-    .append('text')
-    .attr('x', 20 + size)
-    .attr('y', (_, i) => {
-      return 70 + i * (size + 5) + size / 2
-    }) // 100 is where the first dot appears. 25 is the distance between dots
-    .style('fill', (d) => {
-      return colorSeasons(d)
-    })
-    .text((d) => {
-      return d
-    })
-    .attr('text-anchor', 'left')
-    .style('alignment-baseline', 'middle')
 }
 
 defineExpose({ initialize })
@@ -672,3 +626,9 @@ defineExpose({ initialize })
     <div class="viz radarChart" />
   </section>
 </template>
+
+<style>
+.dimmed {
+  opacity: 0.5; /* Adjust the opacity as needed */
+}
+</style>
