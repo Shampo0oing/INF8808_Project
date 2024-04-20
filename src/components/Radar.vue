@@ -169,25 +169,25 @@ function RadarChart(id, data, options, years) {
 
   const seasons = [
     {
-      name: 'Hiver',
+      name: 'Printemps',
       start: { month: 2, day: 20 },
       end: { month: 5, day: 21 },
       color: '#00a2ff',
     },
     {
-      name: 'Printemps',
+      name: 'Été',
       start: { month: 5, day: 21 },
       end: { month: 8, day: 23 },
       color: '#00ff1a',
     },
     {
-      name: 'Été',
+      name: 'Automne',
       start: { month: 8, day: 23 },
       end: { month: 11, day: 21 },
       color: '#ff401c',
     },
     {
-      name: 'Automne',
+      name: 'Hiver',
       start: { month: 11, day: 21 },
       end: { month: 14, day: 20 },
       color: '#ffb32e',
@@ -230,8 +230,8 @@ function RadarChart(id, data, options, years) {
       .attr('x', labelX)
       .attr('y', labelY)
       .text(season.name)
-      .style('font-family', 'Impact')
-      .style('font-size', '13px')
+      .style('font-size', '14px')
+      .style('font-weight', 600)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
   })
@@ -268,7 +268,6 @@ function RadarChart(id, data, options, years) {
     })
     .attr('dy', '0.4em')
     .style('font-size', '15px')
-    .style('font-weight', 'bold')
     .attr('fill', '#737373')
     .text((d, _) => {
       return Format((maxValue * d) / cfg.levels)
@@ -304,7 +303,7 @@ function RadarChart(id, data, options, years) {
   axis
     .append('text')
     .attr('class', 'legend')
-    .style('font-size', '13px')
+    .style('font-size', '14px')
     .attr('text-anchor', 'middle')
     .attr('dy', '0.35em')
     .attr('x', (_, i) => {
@@ -442,8 +441,8 @@ function RadarChart(id, data, options, years) {
       .attr('x', minCirclePosition.x + 10)
       .attr('y', minCirclePosition.y)
       .text(years[index]) // Use the year corresponding to the current dataset
-      .style('font-family', 'Impact')
       .style('font-size', '12px')
+      .style('font-weight', 600)
       .style('fill', '#000')
       .attr('text-anchor', 'start')
       .attr('alignment-baseline', 'middle')
