@@ -42,26 +42,10 @@ onMounted(async () => {
 <template>
   <div>
     <div relative flex flex-col>
-      <section class="intro text-section">
-        <h1>Projet INF8808</h1>
-        <p>
-          La région métropolitaine de Montréal est confrontée chaque année à un
-          défi majeur en matière de sécurité routière. Un nombre significatif de
-          collisions impliquant des véhicules motorisés sont enregistrées
-          annuellement, entraînant des conséquences allant de simples dommages
-          matériels à des blessures graves, voire mortelles. Ces incidents
-          perturbent non seulement la fluidité du trafic, mais mettent également
-          en danger la sécurité des usagers de la route. Dans notre démarche
-          pour renforcer la sécurité routière et déterminer les origines des
-          accidents, nous nous engageons dans une analyse approfondie des
-          incidents afin de repérer les éléments pouvant impacter la sécurité
-          des routes. En améliorant notre compréhension des facteurs influençant
-          le comportement des conducteurs à Montréal, nous visons à accroître
-          leur sensibilisation pour rendre les routes de la ville plus
-          sécurisées.
-        </p>
+      <section class="intro">
+        <MainPage />
       </section>
-      <div>
+      <div id="barChartParent">
         <BarChart ref="barChartRef" />
         <Radar ref="radarRef" />
         <TreeMap ref="treeMapRef" />
