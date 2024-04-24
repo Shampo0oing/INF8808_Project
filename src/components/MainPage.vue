@@ -31,6 +31,7 @@ function scrollToBottom() {
   flex: 0.7;
   flex-direction: column;
   justify-content: center;
+  align-items: start;
 }
 
 .background-image {
