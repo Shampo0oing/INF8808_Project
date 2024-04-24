@@ -25,19 +25,11 @@ function initialize() {
 function changeTab(tab) {
   activeTab.value = tab
   if (tab === 'all') {
-    document.getElementById('chartAll').style.display = 'block'
+    document.getElementById('chartAllYear').style.display = 'block'
     document.getElementById('chartByYear').style.display = 'none'
-    nextTick(() => {
-      const chartAll = document.getElementById('chartAll')
-      chartAll.style.display = 'flex'
-      chartAll.style.justifyContent = 'center'
-      chartAll.style.alignItems = 'center'
-      chartAll.style.height = '100vh'
-      chartAll.style.paddingBottom = '80px'
-    })
   }
   else if (tab === 'byYear') {
-    document.getElementById('chartAll').style.display = 'none'
+    document.getElementById('chartAllYear').style.display = 'none'
     document.getElementById('chartByYear').style.display = 'block'
   }
 }
@@ -77,7 +69,7 @@ function createBarChart() {
 }
 
 function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxheight = 600) {
-  const margin = { top: 60, right: 20, bottom: 50, left: 60 }
+  const margin = { top: 60, right: 20, bottom: 60, left: 60 }
   const width = maxwidth - margin.left - margin.right
   const height = maxheight - margin.top - margin.bottom
 
@@ -199,7 +191,7 @@ defineExpose({ initialize })
         <p>Une nette prédominance des accidents survient sous des conditions météorologiques claires, totalisant 210 524 incidents.</p>
       </section>
       <section>
-        <p>En revanche, les accidents survenant sous des conditions météorologiques plus adverses, telles que la pluie (23 421), la neige ou la grêle (17 748), les tempêtes de neige et le verglas (2 787 et 1 081 respectivement), affichent des chiffres sensiblement inférieurs.</p>
+        <p>En revanche, les accidents survenant sous des conditions météorologiques plus adverses, telles que la pluie (23 462), la neige ou la grêle (17 749), la poudrerie et le verglas (2752 et 1 090 respectivement), affichent des chiffres sensiblement inférieurs.</p>
       </section>
       <section>
         <p>L'examen des données annuelles révèle  une prédominance marquée des accidents se produit sous des conditions météorologiques claires, avec des chiffres variant légèrement d'une année à l'autre mais restant significativement élevés. </p>
@@ -218,25 +210,31 @@ defineExpose({ initialize })
         </button>
       </div>
       <div v-if="showModal" class="modal-backdrop" @click="closeModal" />
-      <div id="chartAll" class="chart" />
-      <div id="chartByYear" class="chart" style="display: none;">
-        <div class="chart-row">
-          <div id="chart2011" @click="showChart('chart2011')" />
-          <div id="chart2012" @click="showChart('chart2012')" />
-          <div id="chart2013" @click="showChart('chart2013')" />
-          <div id="chart2014" @click="showChart('chart2014')" />
+      <div class="chart-container">
+        <div id="chartAllYear" class="chart" style="padding-bottom: 80px;">
+          <div class="chart-row">
+            <div id="chartAll" />
+          </div>
         </div>
-        <div class="chart-row">
-          <div id="chart2015" @click="showChart('chart2015')" />
-          <div id="chart2016" @click="showChart('chart2016')" />
-          <div id="chart2017" @click="showChart('chart2017')" />
-          <div id="chart2018" @click="showChart('chart2018')" />
-        </div>
-        <div class="chart-row">
-          <div id="chart2019" @click="showChart('chart2019')" />
-          <div id="chart2020" @click="showChart('chart2020')" />
-          <div id="chart2021" @click="showChart('chart2021')" />
-          <div id="chart2022" @click="showChart('chart2022')" />
+        <div id="chartByYear" class="chart" style="display: none;">
+          <div class="chart-row">
+            <div id="chart2011" @click="showChart('chart2011')" />
+            <div id="chart2012" @click="showChart('chart2012')" />
+            <div id="chart2013" @click="showChart('chart2013')" />
+            <div id="chart2014" @click="showChart('chart2014')" />
+          </div>
+          <div class="chart-row">
+            <div id="chart2015" @click="showChart('chart2015')" />
+            <div id="chart2016" @click="showChart('chart2016')" />
+            <div id="chart2017" @click="showChart('chart2017')" />
+            <div id="chart2018" @click="showChart('chart2018')" />
+          </div>
+          <div class="chart-row">
+            <div id="chart2019" @click="showChart('chart2019')" />
+            <div id="chart2020" @click="showChart('chart2020')" />
+            <div id="chart2021" @click="showChart('chart2021')" />
+            <div id="chart2022" @click="showChart('chart2022')" />
+          </div>
         </div>
       </div>
       <div v-if="showModal" id="chartModal" class="modal" style="z-index: 9999;">
@@ -255,14 +253,6 @@ defineExpose({ initialize })
 <style scoped>
 .viz {
   flex-direction: column;
-}
-
-#chartAll {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding-bottom: 80px;
 }
 
 .tab {
@@ -327,5 +317,13 @@ defineExpose({ initialize })
   background: none;
   border: none;
   cursor: pointer;
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 </style>
