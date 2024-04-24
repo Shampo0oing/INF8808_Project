@@ -30,8 +30,8 @@ function initialize() {
       .nodeWidth(15)
       .nodePadding(50)
       .extent([
-        [50, 50],
-        [1000 - 100, 700 - 10],
+        [50, 150],
+        [900, 800],
       ])
     /*
     const allData = props.accidents.flat();
@@ -203,8 +203,7 @@ function initialize() {
       .join('path')
       .attr('d', sankeyLinkHorizontal())
       .attr('stroke', 'black')
-      .attr('stroke-width', d => d.width)
-      // .attr("transform", `translate(${xOffset}, 0)`)
+      .attr('stroke-width', d => Math.max(2, d.width)) // Set the width of the link based on the value
       .on('mouseover', (event, d) => {
         d3.select(event.target).attr('stroke', 'red')
         tooltip
@@ -234,18 +233,45 @@ defineExpose({ initialize })
   <section class="viz-section">
     <div class="steps">
       <section>
-        <h1>Title 1</h1>
-        <p>Text of section 1...</p>
+        <p>
+          Ce diagramme Sankey représente l'ensemble des accidents répartis en
+          trois catégories distinctes : la période de la journée, la gravité des
+          accidents et le secteur de l'accident.
+        </p>
       </section>
       <section>
-        <p>Title 2</p>
+        <h1>Période de la journée</h1>
+        <p>
+          Nous sommes en général inclinés à croire qu'il y a plus d'accidents la
+          nuit à cause de la fatigue au volant et d'une visibilité réduite. Mais
+          nous pouvons voir que la majorité des accidents se produisent durant
+          le jour, probablement en raison du volume plus élevé de circulation.
+        </p>
       </section>
       <section>
-        <p>Title 3</p>
+        <h1>Gravité des accidents</h1>
+        <p>
+          Il est remarquable que la grande majorité entraîne des dommages
+          matériels. De plus, bien que le nombre d'accidents mortels ou graves
+          soit à peu près équivalent tant le jour que la nuit, il y a environ
+          trois fois plus d'accidents durant le jour. Ce contraste accentué,
+          avec un nombre plus élevé d'accidents la journée, pourrait s'expliquer
+          par la meilleure visibilité offerte par la lumière du jour, permettant
+          ainsi aux conducteurs de ralentir et de mieux maîtriser leur véhicule.
+        </p>
       </section>
       <section>
-        <h1>Title 4</h1>
-        <p>Text of section 4...</p>
+        <h1>Le secteur de l'accident</h1>
+        <p>
+          En ce qui concerne les accidents par secteur on remarque que les
+          accidents mortels ou graves sont plus fréquents dans les secteurs
+          résidentiels et commerciaux, tant de jour que de nuit, mais avec une
+          légère prédominance la nuit. Pour les accidents légers et les
+          accidents avec dommages matériels, le secteur le plus touché est
+          également le secteur résidentiel suivi du secteur commercial. On voit
+          en général, que le ratio de la gravité des accidents est environ le
+          même dans tous les secteurs.
+        </p>
       </section>
     </div>
     <div ref="sankeyContainer" class="viz sankey-container" />
