@@ -84,9 +84,17 @@ function createBarplot(vizNum: number) {
     .selectAll('text')
     .style('font-size', '14px')
 
+  const definedColors = [
+    'rgb(224, 122, 95)',
+    'rgb(242, 204, 143)',
+    'rgb(95, 197, 224)',
+    'rgb(133, 224, 95)',
+  ]
+
+  // Create a color scale
   const color = d3.scaleOrdinal<string>()
     .domain(subgroups)
-    .range(Array.from({ length: subgroups.length }, (_, i) => d3.interpolateRainbow(i / subgroups.length)))
+    .range(definedColors)
 
   const stackedData = d3.stack().keys(subgroups)(Object.values(data.value))
 
