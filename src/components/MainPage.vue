@@ -19,7 +19,7 @@ function scrollToBottom() {
         </p>
       </div>
       <button @click="scrollToBottom">
-        <img src="/public/arrow.svg" class="arrow">
+        <img src="/arrow.svg" class="arrow">
       </button>
     </div>
   </div>
@@ -49,7 +49,7 @@ function scrollToBottom() {
 .background-image {
   display: flex;
   justify-content: center;
-  background-image: url('/public/car.svg');
+  background-image: url('/car.svg');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
