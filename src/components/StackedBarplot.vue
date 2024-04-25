@@ -84,9 +84,17 @@ function createBarplot(vizNum: number) {
     .selectAll('text')
     .style('font-size', '14px')
 
+  const definedColors = [
+    'rgb(224, 122, 95)',
+    'rgb(242, 204, 143)',
+    'rgb(95, 197, 224)',
+    'rgb(133, 224, 95)',
+  ]
+
+  // Create a color scale
   const color = d3.scaleOrdinal<string>()
     .domain(subgroups)
-    .range(Array.from({ length: subgroups.length }, (_, i) => d3.interpolateRainbow(i / subgroups.length)))
+    .range(definedColors)
 
   const stackedData = d3.stack().keys(subgroups)(Object.values(data.value))
 
@@ -125,7 +133,7 @@ function createBarplot(vizNum: number) {
     const subgroupValue = d.data[subgroupName]
     tooltip
       .html(`${subgroupName}: ${subgroupValue}`)
-      .style('opacity', 1)
+      .style('opacity', 1).style('background-color', color(subgroupName))
   }
 
   function mousemove(event: any) {
@@ -140,7 +148,7 @@ function createBarplot(vizNum: number) {
   // ----------------
   // LEGEND
   // ----------------
-  const legend = d3.select(`#legend${vizNum}`).append('svg').attr('width', '350px')
+  const legend = d3.select(`#legend${vizNum}`).append('svg')
 
   const legendItems = legend.selectAll('.legend-item')
     .data(subgroups)
@@ -157,7 +165,15 @@ function createBarplot(vizNum: number) {
   legendItems.append('text')
     .attr('x', 20)
     .attr('y', 10)
-    .text(d => d)
+    .text((d, i, nodes) => {
+      if (i === nodes.length - 1) {
+        const newLabel = d.substring(d.indexOf('inférieurs'))
+        return newLabel.charAt(0).toUpperCase() + newLabel.slice(1)
+      }
+      else {
+        return d
+      }
+    })
 }
 
 defineExpose({ initialize })
@@ -230,17 +246,16 @@ div[id^='viz'] {
 div[id^='legend'] {
   display: flex;
   align-items: center;
-  width: 430px;
 }
 div[class^='tooltip'] {
   opacity: 0;
-  background-color: white;
   border: 1px solid;
   border-radius: 5px;
   padding: 10px;
   display: flex;
   align-items: center;
-  width: fit-content;
+  width: 350px;
+  justify-content: center;
   transform: translateY(-55%);
 }
 </style>
