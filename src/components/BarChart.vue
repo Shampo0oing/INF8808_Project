@@ -73,6 +73,15 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxhei
   const width = maxwidth - margin.left - margin.right
   const height = maxheight - margin.top - margin.bottom
 
+  function useColorPalette() {
+    return {
+      orange: '#FFA482',
+      blue: '#6FD0FF',
+    }
+  }
+
+  const color = useColorPalette()
+
   const svg = d3.select(chartRef)
     .append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -97,7 +106,7 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxhei
     .attr('y', d => y(d.count))
     .attr('width', x.bandwidth())
     .attr('height', d => height - y(d.count))
-    .attr('fill', 'steelblue')
+    .attr('fill', color.blue)
     .append('title')
     .text(d => `Type: ${d.type}\nNombre d'accidents: ${d.count}`)
 
