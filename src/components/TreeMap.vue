@@ -6,7 +6,13 @@ import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
 const defaultData = jsonDefaultData
 const seriousData = jsonSeriousData
 
-let div
+const defaultTotal = defaultData.reduce((acc, cur) => acc + cur.value, 0)
+const seriousTotal = seriousData.reduce((acc, cur) => acc + cur.value, 0)
+
+const currentTotal = ref(defaultTotal)
+
+let treeMap = null
+let tooltip = null
 
 const imageURL = {
   'véhicule': 'car-collision.svg',
@@ -15,25 +21,30 @@ const imageURL = {
   'cycliste': 'cyclist.svg',
 }
 
+const formatNumber = d3.format(',.0f')
+
 function initialize() {
   return new Promise((resolve) => {
     resolve([
       (direction) => {
+        currentTotal.value = defaultTotal
         if (direction === 'down') {
-          div = null
+          treeMap = null
           refreshData(defaultData)
         }
       },
       (direction) => {
+        currentTotal.value = defaultTotal
         if (direction === 'up')
           refreshData(defaultData)
       },
       (direction) => {
+        currentTotal.value = seriousTotal
         if (direction === 'down') {
           refreshData(seriousData)
         }
         else {
-          div = null
+          treeMap = null
           refreshData(seriousData)
         }
       },
@@ -47,9 +58,16 @@ function createTreeMap(data) {
   const width = 600 - margin.left - margin.right
   const height = 600 - margin.top - margin.bottom
 
-  if (!div) {
+  if (!treeMap) {
+    tooltip = d3.select('#treeMap')
+      .selectAll('.tooltip')
+      .data([null]) // Bind a single-item array to the tooltip
+      .join('article') // Enter new tooltips or update existing ones
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+
     // append the div object to the body of the page
-    div = d3
+    treeMap = d3
       .select('#treeMap')
       .selectAll('div')
       .data([data]) // Bind the data to the div
@@ -77,8 +95,7 @@ function createTreeMap(data) {
   // The coordinates are added to the root object above
   d3.treemap().size([width, height]).padding(4).round(true)(root)
 
-  // use this information to add divs:
-  const leaf = div
+  const leaf = treeMap
     .selectAll('div')
     .data(root.leaves(), d => d.data.name) // Add a key function here
     .join(
@@ -96,10 +113,27 @@ function createTreeMap(data) {
         .style('border', '1px solid black')
         .style('position', 'absolute')
         .style('opacity', 0)
+        .on('mouseover', (event, d) => {
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0.9)
+          tooltip.text(getAccidentDescription(d.data.name, d.data.value, d.data.percentage))
+        })
+        .on('mousemove', (event) => {
+          tooltip
+            .style('left', `${event.pageX}px`)
+            .style('top', `${event.pageY - 28}px`)
+        })
+        .on('mouseout', () => {
+          tooltip.transition()
+            .duration(500)
+            .style('opacity', 0)
+        })
         .call(enter => enter.transition() // Add a transition to the entering elements
           .duration(300)
           .delay((_, i) => i * 50)
-          .ease(d3.easeQuadInOut).style('opacity', 1)),
+          .ease(d3.easeQuadInOut).style('opacity', 1),
+        ),
       update => update // Update existing elements
         .call(update => update.transition() // Add a transition to the updating elements
           .duration(300)
@@ -137,6 +171,35 @@ function createTreeMap(data) {
 
 async function refreshData(data) {
   createTreeMap(data)
+}
+
+function getAccidentDescription(accident, value, percentage) {
+  let type = ''
+
+  switch (accident) {
+    case 'véhicule':
+      type = 'étaient dus à une collision avec un véhicule routier.'
+      break
+    case 'objet fixe':
+      type = 'étaient dus à une collision avec un objet fixe. (lampadaire, poteau, arbre, bâtiment, etc.)'
+      break
+    case 'piéton':
+      type = 'étaient dus à une collision avec un piéton.'
+      break
+    case 'cycliste':
+      type = 'étaient dus à une collision avec un cycliste.'
+      break
+    case 'sans collision':
+      type = 'n\'ont pas été causés par une collision. (renversement, quitte la chaussée, etc.)'
+      break
+    case 'animal':
+      type = 'étaient dus à une collision avec un animal.'
+      break
+    default:
+      type = 'étaient dus à un autre genre de collision. (collision avec un train, objet d\'étaché, etc.)'
+  }
+
+  return `Parmis les ${formatNumber(currentTotal.value)} accidents recensés, ${formatNumber(value)} (soit ${percentage}) ${type}`
 }
 
 defineExpose({ initialize })
@@ -183,6 +246,14 @@ defineExpose({ initialize })
         </p>
       </section>
     </div>
-    <div id="treeMap" class="viz flex items-center justify-center" />
+    <div id="treeMap" class="viz flex flex-col items-center justify-center" />
   </section>
 </template>
+
+<style>
+.tooltip {
+  width: 500px;
+  height: 100px;
+  text-align: left;
+}
+</style>
