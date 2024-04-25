@@ -2,130 +2,83 @@
 import * as d3 from 'd3'
 import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
 import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
+import useColorPalette from '~/composables/color'
+
+const color = useColorPalette()
 
 const defaultData = jsonDefaultData
 const seriousData = jsonSeriousData
 
+const defaultTotal = defaultData.reduce((acc, cur) => acc + cur.value, 0)
+const seriousTotal = seriousData.reduce((acc, cur) => acc + cur.value, 0)
+
+const currentTotal = ref(defaultTotal)
+
+let treeMap = null
+let tooltip = null
+
+const imageURL = {
+  'véhicule': 'car-collision.svg',
+  'objet fixe': 'car-fixed-object.svg',
+  'piéton': 'pedestrian.svg',
+  'cycliste': 'cyclist.svg',
+}
+
+const formatNumber = d3.format(',.0f')
+
 function initialize() {
   return new Promise((resolve) => {
-    // preProcess()
-    createTreeMap(defaultData)
-
     resolve([
-      () => {
-        console.warn(1)
+      (direction) => {
+        currentTotal.value = defaultTotal
+        if (direction === 'down') {
+          treeMap = null
+          refreshData(defaultData)
+        }
       },
       (direction) => {
+        currentTotal.value = defaultTotal
         if (direction === 'up')
           refreshData(defaultData)
       },
-      () => refreshData(seriousData),
+      (direction) => {
+        currentTotal.value = seriousTotal
+        if (direction === 'down') {
+          refreshData(seriousData)
+        }
+        else {
+          treeMap = null
+          refreshData(seriousData)
+        }
+      },
     ])
   })
 }
 
-// const preProcess = (seriousAccident = false) => {
-//   // Preprocess
-//   let tempData = props.accidents.flat()
-//   let totalValue = 0;
-
-//   tempData = tempData.reduce((acc, curr) => {
-//     if (curr.GRAVITE !== 'Mortel ou grave') return acc
-//     const currentAccidentType = curr.CD_GENRE_ACCDN
-//     const existingData = acc.find(item => item.name === currentAccidentType)
-//     if (existingData) {
-//       existingData.value += 1
-//     }
-//     else if (currentAccidentType) {
-//       acc.push({
-//         name: currentAccidentType,
-//         parent: 'Origin',
-//         value: 1,
-//         color: color[currentAccidentType]
-//       })
-//     }
-
-//     totalValue += 1;
-
-//     return acc
-//   }, [])
-
-//   tempData.push({
-//     name: 'Origin',
-//     parent: '',
-//     value: 0,
-//   })
-
-//   tempData = tempData.map((d) => {
-//     const percentage = `${((d.value / totalValue) * 100).toFixed(2)}%`
-//     return {
-//       name: d.name,
-//       parent: d.parent,
-//       value: d.value,
-//       color: d.color,
-//       percentage,
-//     }
-//   })
-
-//   data = tempData;
-// }
-
-// const formatData = (dataToFormat) => {
-//   return dataToFormat.reduce((acc, curr) => {
-//     const currentAccidentType = curr.CD_GENRE_ACCDN
-//     const existingData = acc.find(item => item.name === currentAccidentType)
-//     if (existingData) {
-//       existingData.value += 1
-//     }
-//     else if (currentAccidentType) {
-//       acc.push({
-//         name: currentAccidentType,
-//         parent: 'Origin',
-//         value: 1,
-//         color: color[currentAccidentType]
-//       })
-//     }
-//     return acc
-//   }, [])
-// }
-
-// const formatDataWithSeriousAccident = (dataToFormat) => {
-//   return dataToFormat.reduce((acc, curr) => {
-//     if (curr.GRAVITE !== 'Mortel ou grave') return acc
-//     const currentAccidentType = curr.CD_GENRE_ACCDN
-//     const existingData = acc.find(item => item.name === currentAccidentType)
-//     if (existingData) {
-//       existingData.value += 1
-//     }
-//     else if (currentAccidentType) {
-//       acc.push({
-//         name: currentAccidentType,
-//         parent: 'Origin',
-//         value: 1,
-//         color: color[currentAccidentType]
-//       })
-//     }
-//     return acc
-//   }, [])
-// }
-
 function createTreeMap(data) {
   // set the dimensions and margins of the graph
   const margin = { top: 10, right: 10, bottom: 10, left: 10 }
-  const width = 445 - margin.left - margin.right
-  const height = 445 - margin.top - margin.bottom
+  const width = 600 - margin.left - margin.right
+  const height = 600 - margin.top - margin.bottom
 
-  // append the svg object to the body of the page
-  const svg = d3
-    .select('#treeMap')
-    .append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
-    .append('g')
-    .attr(
-      'transform',
-      `translate(${(width + margin.left + margin.right) / 2}, ${(height + margin.top + margin.bottom) / 2})`,
-    )
+  if (!treeMap) {
+    tooltip = d3.select('#treeMap')
+      .selectAll('.tooltip')
+      .data([null]) // Bind a single-item array to the tooltip
+      .join('article') // Enter new tooltips or update existing ones
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+
+    // append the div object to the body of the page
+    treeMap = d3
+      .select('#treeMap')
+      .selectAll('div')
+      .data([data]) // Bind the data to the div
+      .join('div') // Enter new divs or update existing ones
+      .style('width', `${width + margin.left + margin.right}px`)
+      .style('height', `${height + margin.top + margin.bottom}px`)
+      .style('position', 'relative')
+  }
 
   // stratify the data: reformatting for d3.js
   const root = d3
@@ -139,89 +92,136 @@ function createTreeMap(data) {
     .sum((d) => {
       return +d.value
     }) // Compute the numeric value for each entity
+    .sort((a, b) => (b.height - a.height || b.value - a.value))
 
   // Then d3.treemap computes the position of each element of the hierarchy
   // The coordinates are added to the root object above
-  d3.treemap().size([width, height]).padding(4)(root)
+  d3.treemap().size([width, height]).padding(4).round(true)(root)
 
-  // use this information to add rectangles:
-  svg
-    .selectAll('rect')
-    .data(root.leaves())
-    .join('rect')
-    .attr('x', (d) => {
-      return d.x0
-    })
-    .attr('y', (d) => {
-      return d.y0
-    })
-    .attr('width', (d) => {
-      return d.x1 - d.x0
-    })
-    .attr('height', (d) => {
-      return d.y1 - d.y0
-    })
-    .style('stroke', 'black')
-    .style('fill', (d) => {
-      return d.data.color
-    })
-
-  // and to add the text labels
-  // svg
-  //   .selectAll('text')
-  //   .data(root.leaves())
-  //   .join('text')
-  //   .attr('x', (d) => { return d.x0 + 10 }) // +10 to adjust position (more right)
-  //   .attr('y', (d) => { return d.y0 + 20 }) // +20 to adjust position (lower)
-  //   .text((d) => { return `${d.data.name[0]} (${d.data.percentage})` })
-  //   .attr('font-size', '15px')
-
-  // Sort the data array by value
-  const legendData = data.filter(d => d.value !== 0)
-  legendData.sort((a, b) => b.value - a.value)
-
-  // Create a legend g element
-  const legend = svg
-    .append('g')
-    .attr(
-      'transform',
-      `translate(${width + margin.right + 20}, ${margin.top})`,
+  const leaf = treeMap
+    .selectAll('div')
+    .data(root.leaves(), d => d.data.name) // Add a key function here
+    .join(
+      enter => enter.append('div') // Enter new elements
+        .attr('class', 'leaf')
+        .style('left', d => `${d.x0}px`)
+        .style('top', d => `${d.y0}px`)
+        .style('width', d => `${d.x1 - d.x0}px`)
+        .style('height', d => `${d.y1 - d.y0}px`)
+        .style('background-color', d => getColor(d.data.name))
+        .style('background-image', d => imageURL[d.data.name] ? `url(${imageURL[d.data.name]})` : 'none')
+        .style('background-repeat', 'no-repeat')
+        .style('background-position', 'center bottom')
+        .style('background-size', d => (d.y1 - d.y0) > (d.x1 - d.x0) ? '100% auto' : 'auto 100%')
+        .style('border', '1px solid black')
+        .style('position', 'absolute')
+        .style('opacity', 0)
+        .on('mouseover', (event, d) => {
+          tooltip.transition()
+            .duration(200)
+            .style('opacity', 0.9)
+          tooltip.text(getAccidentDescription(d.data.name, d.data.value, d.data.percentage))
+        })
+        .on('mousemove', (event) => {
+          tooltip
+            .style('left', `${event.pageX}px`)
+            .style('top', `${event.pageY - 28}px`)
+        })
+        .on('mouseout', () => {
+          tooltip.transition()
+            .duration(500)
+            .style('opacity', 0)
+        })
+        .call(enter => enter.transition() // Add a transition to the entering elements
+          .duration(300)
+          .delay((_, i) => i * 50)
+          .ease(d3.easeQuadInOut).style('opacity', 1),
+        ),
+      update => update // Update existing elements
+        .call(update => update.transition() // Add a transition to the updating elements
+          .duration(300)
+          .ease(d3.easeQuadInOut)
+          .style('left', d => `${d.x0}px`)
+          .style('top', d => `${d.y0}px`)
+          .style('width', d => `${d.x1 - d.x0}px`)
+          .style('height', d => `${d.y1 - d.y0}px`)
+          .style('opacity', 1)
+          .style('background-size', d => (d.y1 - d.y0) > (d.x1 - d.x0) ? '100% auto' : 'auto 100%'),
+        ),
+      exit => exit // Exit old elements
+        .call(exit => exit.transition() // Add a transition to the exiting elements
+          .duration(300)
+          .ease(d3.easeQuadInOut)
+          .style('opacity', 0)
+          .remove()),
     )
 
-  // Append rectangles for each color
-  legend
-    .selectAll('rect')
-    .data(legendData)
-    .join('rect')
-    .attr('x', 0)
-    .attr('y', (d, i) => i * 40) // 20 is the distance between each rectangle
-    .attr('width', 20)
-    .attr('height', 20)
-    .style('fill', d => d.color)
-    .style('stroke', 'black') // Add a black outline
-
-  // Append text for each color
-  legend
-    .selectAll('text')
-    .data(legendData)
-    .join('text')
-    .attr('x', 30) // 15 is the distance from the rectangle
-    .attr('y', (d, i) => i * 40 + 15) // 9 is the vertical alignment of the text
-    .text(
-      d =>
-        `${d.name.charAt(0).toUpperCase() + d.name.slice(1)} (${d.percentage})`,
-    ) // Show the value next to the key
-    .attr('font-size', '16px')
+  // and to add the text labels
+  leaf
+    .append('div')
+    .attr('class', 'leaf-label')
+    .style('position', 'relative')
+    .style('left', '2px')
+    .style('top', '2px')
+    .text(d => `${d.data.name} (${d.data.percentage})`)
+    .style('font-size', '13px')
+    .style('opacity', 0)
+    .transition()
+    .duration(300)
+    .delay(300)
+    .style('opacity', 1)
 }
 
 async function refreshData(data) {
-  d3.select('#treeMap svg').remove()
-
-  await nextTick()
-
-  // preProcess(data)
-
   createTreeMap(data)
+}
+
+function getColor(accident) {
+  switch (accident) {
+    case 'véhicule':
+      return color.red
+    case 'objet fixe':
+      return color.blue
+    case 'piéton':
+      return color.yellow
+    case 'cycliste':
+      return color.pink
+    case 'sans collision':
+      return color.green
+    case 'animal':
+      return '#adb5bd'
+    default:
+      return '#f4f1de'
+  }
+}
+
+function getAccidentDescription(accident, value, percentage) {
+  let type = ''
+
+  switch (accident) {
+    case 'véhicule':
+      type = 'étaient dus à une collision avec un véhicule routier.'
+      break
+    case 'objet fixe':
+      type = 'étaient dus à une collision avec un objet fixe. (lampadaire, poteau, arbre, bâtiment, etc.)'
+      break
+    case 'piéton':
+      type = 'étaient dus à une collision avec un piéton.'
+      break
+    case 'cycliste':
+      type = 'étaient dus à une collision avec un cycliste.'
+      break
+    case 'sans collision':
+      type = 'n\'ont pas été causés par une collision. (renversement, quitte la chaussée, etc.)'
+      break
+    case 'animal':
+      type = 'étaient dus à une collision avec un animal.'
+      break
+    default:
+      type = 'étaient dus à un autre genre de collision. (collision avec un train, objet d\'étaché, etc.)'
+  }
+
+  return `Parmis les ${formatNumber(currentTotal.value)} accidents recensés, ${formatNumber(value)} (soit ${percentage}) ${type}`
 }
 
 defineExpose({ initialize })
@@ -268,6 +268,14 @@ defineExpose({ initialize })
         </p>
       </section>
     </div>
-    <div id="treeMap" class="viz" />
+    <div id="treeMap" class="viz flex flex-col items-center justify-center" />
   </section>
 </template>
+
+<style>
+.tooltip {
+  width: 500px;
+  height: 100px;
+  text-align: left;
+}
+</style>
