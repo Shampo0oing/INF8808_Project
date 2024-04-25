@@ -133,7 +133,7 @@ function createBarplot(vizNum: number) {
     const subgroupValue = d.data[subgroupName]
     tooltip
       .html(`${subgroupName}: ${subgroupValue}`)
-      .style('opacity', 1)
+      .style('opacity', 1).style('background-color', color(subgroupName))
   }
 
   function mousemove(event: any) {
@@ -148,7 +148,7 @@ function createBarplot(vizNum: number) {
   // ----------------
   // LEGEND
   // ----------------
-  const legend = d3.select(`#legend${vizNum}`).append('svg').attr('width', '350px')
+  const legend = d3.select(`#legend${vizNum}`).append('svg')
 
   const legendItems = legend.selectAll('.legend-item')
     .data(subgroups)
@@ -165,7 +165,15 @@ function createBarplot(vizNum: number) {
   legendItems.append('text')
     .attr('x', 20)
     .attr('y', 10)
-    .text(d => d)
+    .text((d, i, nodes) => {
+      if (i === nodes.length - 1) {
+        const newLabel = d.substring(d.indexOf('inférieurs'))
+        return newLabel.charAt(0).toUpperCase() + newLabel.slice(1)
+      }
+      else {
+        return d
+      }
+    })
 }
 
 defineExpose({ initialize })
@@ -238,17 +246,16 @@ div[id^='viz'] {
 div[id^='legend'] {
   display: flex;
   align-items: center;
-  width: 430px;
 }
 div[class^='tooltip'] {
   opacity: 0;
-  background-color: white;
   border: 1px solid;
   border-radius: 5px;
   padding: 10px;
   display: flex;
   align-items: center;
-  width: fit-content;
+  width: 350px;
+  justify-content: center;
   transform: translateY(-55%);
 }
 </style>
