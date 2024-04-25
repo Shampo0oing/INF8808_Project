@@ -267,6 +267,10 @@ defineExpose({ initialize })
   transition: background-color 0.3s ease;
 }
 
+.tabs {
+  padding-top: 50px;
+}
+
 .tab:hover {
   background-color: #e0e0e0;
 }
