@@ -42,7 +42,7 @@ onMounted(async () => {
 <template>
   <div>
     <div relative flex flex-col>
-      <section class="intro">
+      <section class="section">
         <MainPage />
       </section>
       <div id="barChartParent">
@@ -53,12 +53,22 @@ onMounted(async () => {
         <Sankey ref="sankeyRef" />
         <StackedBarplot ref="stackedBarplotRef" />
       </div>
+      <section class="section measures">
+        <Measures />
+      </section>
     </div>
   </div>
 </template>
 
 <style>
-.intro {
+.section {
   height: 100vh;
+}
+
+.measures {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
 }
 </style>
