@@ -1,7 +1,7 @@
 <script setup>
 import * as d3 from 'd3'
-import jsonDefaultData from '~/data/treeMap/TreeMapDefault.json'
-import jsonSeriousData from '~/data/treeMap/TreeMapSerious.json'
+import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
+import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
 
 const defaultData = jsonDefaultData
 const seriousData = jsonSeriousData
@@ -116,36 +116,55 @@ function createTreeMap(data) {
   const height = 445 - margin.top - margin.bottom
 
   // append the svg object to the body of the page
-  const svg = d3.select('#treeMap')
+  const svg = d3
+    .select('#treeMap')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
     .append('g')
-    .attr('transform', `translate(${(width + margin.left + margin.right) / 2}, ${(height + margin.top + margin.bottom) / 2})`)
+    .attr(
+      'transform',
+      `translate(${(width + margin.left + margin.right) / 2}, ${(height + margin.top + margin.bottom) / 2})`,
+    )
 
   // stratify the data: reformatting for d3.js
-  const root = d3.stratify()
-    .id((d) => { return d.name }) // Name of the entity (column name is name in csv)
-    .parentId((d) => { return d.parent })(data) // Name of the parent (column name is parent in csv)
-    .sum((d) => { return +d.value }) // Compute the numeric value for each entity
+  const root = d3
+    .stratify()
+    .id((d) => {
+      return d.name
+    }) // Name of the entity (column name is name in csv)
+    .parentId((d) => {
+      return d.parent
+    })(data) // Name of the parent (column name is parent in csv)
+    .sum((d) => {
+      return +d.value
+    }) // Compute the numeric value for each entity
 
   // Then d3.treemap computes the position of each element of the hierarchy
   // The coordinates are added to the root object above
-  d3.treemap()
-    .size([width, height])
-    .padding(4)(root)
+  d3.treemap().size([width, height]).padding(4)(root)
 
   // use this information to add rectangles:
   svg
     .selectAll('rect')
     .data(root.leaves())
     .join('rect')
-    .attr('x', (d) => { return d.x0 })
-    .attr('y', (d) => { return d.y0 })
-    .attr('width', (d) => { return d.x1 - d.x0 })
-    .attr('height', (d) => { return d.y1 - d.y0 })
+    .attr('x', (d) => {
+      return d.x0
+    })
+    .attr('y', (d) => {
+      return d.y0
+    })
+    .attr('width', (d) => {
+      return d.x1 - d.x0
+    })
+    .attr('height', (d) => {
+      return d.y1 - d.y0
+    })
     .style('stroke', 'black')
-    .style('fill', (d) => { return d.data.color })
+    .style('fill', (d) => {
+      return d.data.color
+    })
 
   // and to add the text labels
   // svg
@@ -162,11 +181,16 @@ function createTreeMap(data) {
   legendData.sort((a, b) => b.value - a.value)
 
   // Create a legend g element
-  const legend = svg.append('g')
-    .attr('transform', `translate(${width + margin.right + 20}, ${margin.top})`)
+  const legend = svg
+    .append('g')
+    .attr(
+      'transform',
+      `translate(${width + margin.right + 20}, ${margin.top})`,
+    )
 
   // Append rectangles for each color
-  legend.selectAll('rect')
+  legend
+    .selectAll('rect')
     .data(legendData)
     .join('rect')
     .attr('x', 0)
@@ -177,12 +201,16 @@ function createTreeMap(data) {
     .style('stroke', 'black') // Add a black outline
 
   // Append text for each color
-  legend.selectAll('text')
+  legend
+    .selectAll('text')
     .data(legendData)
     .join('text')
     .attr('x', 30) // 15 is the distance from the rectangle
     .attr('y', (d, i) => i * 40 + 15) // 9 is the vertical alignment of the text
-    .text(d => `${d.name.charAt(0).toUpperCase() + d.name.slice(1)} (${d.percentage})`) // Show the value next to the key
+    .text(
+      d =>
+        `${d.name.charAt(0).toUpperCase() + d.name.slice(1)} (${d.percentage})`,
+    ) // Show the value next to the key
     .attr('font-size', '16px')
 }
 
@@ -204,15 +232,40 @@ defineExpose({ initialize })
     <div class="steps">
       <section>
         <h1>Une variété d'accident.</h1>
-        <p>Entre 2011 et 2022, Montréal a été le théâtre d'une série d'accidents routiers variés, avec une gamme d'incidents allant des collisions entre véhicules aux accidents impliquant des objets fixes et des animaux errants. Cette visualisation offre un regard unique sur ces événements, représentant chaque type d'accident par des rectangles de couleur dont la taille est proportionnelle à sa fréquence relative au cours de cette période.</p>
+        <p>
+          Entre 2011 et 2022, Montréal a été le théâtre d'une série d'accidents
+          routiers variés, avec une gamme d'incidents allant des collisions
+          entre véhicules aux accidents impliquant des objets fixes et des
+          animaux errants. Cette visualisation offre un regard unique sur ces
+          événements, représentant chaque type d'accident par des rectangles de
+          couleur dont la taille est proportionnelle à sa fréquence relative au
+          cours de cette période.
+        </p>
       </section>
       <section>
         <h1>Au cœur des rues montréalaises.</h1>
-        <p>En scrutant la répartition des accidents, nous décelons des nuances révélatrices de la vie urbaine à Montréal. Les collisions entre véhicules prédominent, témoignant de l'intensité des déplacements dans une métropole animée. La présence relativement faible d'accidents impliquant des animaux reflète peut-être les caractéristiques urbaines de la ville, où les interactions avec la faune sauvage sont moins fréquentes qu'en milieu rural.</p>
+        <p>
+          En scrutant la répartition des accidents, nous décelons des nuances
+          révélatrices de la vie urbaine à Montréal. Les collisions entre
+          véhicules prédominent, témoignant de l'intensité des déplacements dans
+          une métropole animée. La présence relativement faible d'accidents
+          impliquant des animaux reflète peut-être les caractéristiques urbaines
+          de la ville, où les interactions avec la faune sauvage sont moins
+          fréquentes qu'en milieu rural.
+        </p>
       </section>
       <section>
         <h1>Impact des accidents graves.</h1>
-        <p>En examinant spécifiquement les accidents mortels ou graves, on remarque des changements frappants par rapport à l'ensemble des accidents. Alors que les accidents impliquant des piétons et des cyclistes ont considérablement augmenté, la proportion d'accidents entre véhicules a diminué. Cette tendance souligne l'importance cruciale de la sécurité des usagers vulnérables de la route et la nécessité de mesures supplémentaires pour prévenir les accidents graves à Montréal.</p>
+        <p>
+          En examinant spécifiquement les accidents mortels ou graves, on
+          remarque des changements frappants par rapport à l'ensemble des
+          accidents. Alors que les accidents impliquant des piétons et des
+          cyclistes ont considérablement augmenté, la proportion d'accidents
+          entre véhicules a diminué. Cette tendance souligne l'importance
+          cruciale de la sécurité des usagers vulnérables de la route et la
+          nécessité de mesures supplémentaires pour prévenir les accidents
+          graves à Montréal.
+        </p>
       </section>
     </div>
     <div id="treeMap" class="viz" />
