@@ -1,7 +1,7 @@
 <script setup>
 import * as d3 from 'd3'
-import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
-import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
+import jsonDefaultData from '~/data/TreeMap/treeMapDefault.json'
+import jsonSeriousData from '~/data/TreeMap/treeMapSerious.json'
 import useColorPalette from '~/composables/color'
 
 const color = useColorPalette()
