@@ -2,6 +2,9 @@
 import * as d3 from 'd3'
 import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
 import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
+import useColorPalette from '~/composables/color'
+
+const color = useColorPalette()
 
 const defaultData = jsonDefaultData
 const seriousData = jsonSeriousData
@@ -105,7 +108,7 @@ function createTreeMap(data) {
         .style('top', d => `${d.y0}px`)
         .style('width', d => `${d.x1 - d.x0}px`)
         .style('height', d => `${d.y1 - d.y0}px`)
-        .style('background-color', d => `${d.data.color}`)
+        .style('background-color', d => getColor(d.data.name))
         .style('background-image', d => imageURL[d.data.name] ? `url(${imageURL[d.data.name]})` : 'none')
         .style('background-repeat', 'no-repeat')
         .style('background-position', 'center bottom')
@@ -171,6 +174,25 @@ function createTreeMap(data) {
 
 async function refreshData(data) {
   createTreeMap(data)
+}
+
+function getColor(accident) {
+  switch (accident) {
+    case 'véhicule':
+      return color.red
+    case 'objet fixe':
+      return color.blue
+    case 'piéton':
+      return color.yellow
+    case 'cycliste':
+      return color.pink
+    case 'sans collision':
+      return color.green
+    case 'animal':
+      return '#adb5bd'
+    default:
+      return '#f4f1de'
+  }
 }
 
 function getAccidentDescription(accident, value, percentage) {
