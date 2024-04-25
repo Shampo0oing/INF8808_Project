@@ -85,10 +85,10 @@ function createBarplot(vizNum: number) {
     .style('font-size', '14px')
 
   const definedColors = [
-    'rgb(224, 122, 95)',
-    'rgb(242, 204, 143)',
-    'rgb(95, 197, 224)',
-    'rgb(133, 224, 95)',
+    '#FFA482',
+    '#FDD893',
+    '#6FD0FF',
+    '#41FAA7',
   ]
 
   // Create a color scale

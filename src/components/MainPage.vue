@@ -19,7 +19,7 @@ function scrollToBottom() {
         </p>
       </div>
       <button @click="scrollToBottom">
-        <img src="/public/arrow.svg" class="arrow">
+        <img src="/arrow.svg" class="arrow">
       </button>
     </div>
   </div>
@@ -34,10 +34,22 @@ function scrollToBottom() {
   align-items: start;
 }
 
+.title h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.title p {
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
 .background-image {
   display: flex;
   justify-content: center;
-  background-image: url('/public/car.svg');
+  background-image: url('/car.svg');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
