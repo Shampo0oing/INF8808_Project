@@ -6,6 +6,7 @@ import Sankey from '~/components/Sankey.vue'
 import StackedBarplot from '~/components/StackedBarplot.vue'
 import TreeMap from '~/components/TreeMap.vue'
 import Waffle from '~/components/Waffle.vue'
+import Measures from '~/components/Measures.vue'
 
 defineOptions({
   name: 'IndexPage',
@@ -17,6 +18,7 @@ const radarRef = ref<InstanceType<typeof Radar>>()
 const waffleRef = ref<InstanceType<typeof Waffle>>()
 const stackedBarplotRef = ref<InstanceType<typeof StackedBarplot>>()
 const sankeyRef = ref<InstanceType<typeof Sankey>>()
+const measuresRef = ref<InstanceType<typeof Measures>>()
 
 onMounted(async () => {
   let elements: HTMLElement[] = [];
@@ -33,8 +35,9 @@ onMounted(async () => {
     waffleRef.value!.initialize(),
     sankeyRef.value!.initialize(),
     stackedBarplotRef.value!.initialize(),
-  ]).then(([c1, c2, c3, c4, c5, c6]) => {
-    scroller([c1, c2, c3, c4, c5, c6]).initialize()
+    measuresRef.value!.initialize(),
+  ]).then(([c1, c2, c3, c4, c5, c6, c7]) => {
+    scroller([c1, c2, c3, c4, c5, c6, c7]).initialize()
   })
 })
 </script>
@@ -52,10 +55,8 @@ onMounted(async () => {
         <Waffle ref="waffleRef" />
         <Sankey ref="sankeyRef" />
         <StackedBarplot ref="stackedBarplotRef" />
+        <Measures ref="measuresRef" />
       </div>
-      <section class="section measures">
-        <Measures />
-      </section>
     </div>
   </div>
 </template>
@@ -63,12 +64,5 @@ onMounted(async () => {
 <style>
 .section {
   height: 100vh;
-}
-
-.measures {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
 }
 </style>
