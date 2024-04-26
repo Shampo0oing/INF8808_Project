@@ -72,6 +72,7 @@ declare global {
   const onUnmounted: typeof import('vue')['onUnmounted']
   const onUpdated: typeof import('vue')['onUpdated']
   const pausableWatch: typeof import('@vueuse/core')['pausableWatch']
+  const preferredDark: typeof import('./src/composables/dark')['preferredDark']
   const processData: typeof import('./src/composables/stackedBarplot-mapper')['processData']
   const provide: typeof import('vue')['provide']
   const provideLocal: typeof import('@vueuse/core')['provideLocal']

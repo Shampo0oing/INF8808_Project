@@ -13,6 +13,7 @@
     "postinstall": "npx simple-git-hooks"
   },
   "dependencies": {
+    "@unhead/vue": "^1.9.7",
     "@vueuse/core": "^10.9.0",
     "d3": "^7.9.0",
     "d3-sankey": "^0.12.3",
