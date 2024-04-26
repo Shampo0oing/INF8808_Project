@@ -25,19 +25,11 @@ function initialize() {
 function changeTab(tab) {
   activeTab.value = tab
   if (tab === 'all') {
-    document.getElementById('chartAll').style.display = 'block'
+    document.getElementById('chartAllYear').style.display = 'block'
     document.getElementById('chartByYear').style.display = 'none'
-    nextTick(() => {
-      const chartAll = document.getElementById('chartAll')
-      chartAll.style.display = 'flex'
-      chartAll.style.justifyContent = 'center'
-      chartAll.style.alignItems = 'center'
-      chartAll.style.height = '100vh'
-      chartAll.style.paddingBottom = '80px'
-    })
   }
   else if (tab === 'byYear') {
-    document.getElementById('chartAll').style.display = 'none'
+    document.getElementById('chartAllYear').style.display = 'none'
     document.getElementById('chartByYear').style.display = 'block'
   }
 }
@@ -72,14 +64,23 @@ function createBarChart() {
   // Create bar chart for each year
   years.forEach((year) => {
     const dataForYear = getDataForYear(year)
-    createBarChartForData(dataForYear, `#chart${year}`, year, 350, 300)
+    createBarChartForData(dataForYear, `#chart${year}`, year, 180, 180)
   })
 }
 
-function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxheight = 550) {
-  const margin = { top: 60, right: 20, bottom: 50, left: 100 }
+function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxheight = 600) {
+  const margin = { top: 60, right: 20, bottom: 60, left: 60 }
   const width = maxwidth - margin.left - margin.right
   const height = maxheight - margin.top - margin.bottom
+
+  function useColorPalette() {
+    return {
+      orange: '#FFA482',
+      blue: '#6FD0FF',
+    }
+  }
+
+  const color = useColorPalette()
 
   const svg = d3.select(chartRef)
     .append('svg')
@@ -93,11 +94,6 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxhei
     .range([0, width])
     .padding(0.2)
 
-  // Define color scale
-  const color = d3.scaleOrdinal()
-    .domain(data.map(d => d.type))
-    .range(['#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c', '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5', '#8c564b'])
-
   const y = d3.scaleLinear()
     .domain([0, d3.max(data, d => d.count)])
     .range([height, 0])
@@ -110,7 +106,7 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxhei
     .attr('y', d => y(d.count))
     .attr('width', x.bandwidth())
     .attr('height', d => height - y(d.count))
-    .attr('fill', d => color(d.type))
+    .attr('fill', color.blue)
     .append('title')
     .text(d => `Type: ${d.type}\nNombre d'accidents: ${d.count}`)
 
@@ -137,11 +133,14 @@ function createBarChartForData(data, chartRef, year = '', maxwidth = 700, maxhei
     .call(wrap, x.bandwidth())
 
   if (year !== '') {
+    svg.selectAll('text')
+      .style('font-size', '8px')
+
     svg.append('text')
       .attr('x', width / 2)
       .attr('y', 0 - (margin.top / 2))
       .attr('text-anchor', 'middle')
-      .style('font-size', '16px')
+      .style('font-size', '12px')
       .style('text-decoration', 'underline')
       .text(year)
   }
@@ -198,10 +197,10 @@ defineExpose({ initialize })
     <div class="steps" style="z-index: unset;">
       <section>
         <h1>La météo et les accidents : un éclairage surprenant </h1>
-        <p>Une nette prédominance des accidents survient sous des conditions météorologiques claires, totalisant 210 597 incidents.</p>
+        <p>Une nette prédominance des accidents survient sous des conditions météorologiques claires, totalisant 210 524 incidents.</p>
       </section>
       <section>
-        <p>En revanche, les accidents survenant sous des conditions météorologiques plus adverses, telles que la pluie (23 421), la neige ou la grêle (17 748), les tempêtes de neige et le verglas (2 787 et 1 081 respectivement), affichent des chiffres sensiblement inférieurs.</p>
+        <p>En revanche, les accidents survenant sous des conditions météorologiques plus adverses, telles que la pluie (23 462), la neige ou la grêle (17 749), la poudrerie et le verglas (2752 et 1 090 respectivement), affichent des chiffres sensiblement inférieurs.</p>
       </section>
       <section>
         <p>L'examen des données annuelles révèle  une prédominance marquée des accidents se produit sous des conditions météorologiques claires, avec des chiffres variant légèrement d'une année à l'autre mais restant significativement élevés. </p>
@@ -220,31 +219,31 @@ defineExpose({ initialize })
         </button>
       </div>
       <div v-if="showModal" class="modal-backdrop" @click="closeModal" />
-      <div id="chartAll" class="chart" />
-      <div id="chartByYear" class="chart" style="display: none; height: 600px; overflow-y: auto;">
-        <div class="chart-row">
-          <div id="chart2011" @click="showChart('chart2011')" />
-          <div id="chart2012" @click="showChart('chart2012')" />
+      <div class="chart-container">
+        <div id="chartAllYear" class="chart" style="padding-bottom: 80px;">
+          <div class="chart-row">
+            <div id="chartAll" />
+          </div>
         </div>
-        <div class="chart-row">
-          <div id="chart2013" @click="showChart('chart2013')" />
-          <div id="chart2014" @click="showChart('chart2014')" />
-        </div>
-        <div class="chart-row">
-          <div id="chart2015" @click="showChart('chart2015')" />
-          <div id="chart2016" @click="showChart('chart2016')" />
-        </div>
-        <div class="chart-row">
-          <div id="chart2017" @click="showChart('chart2017')" />
-          <div id="chart2018" @click="showChart('chart2018')" />
-        </div>
-        <div class="chart-row">
-          <div id="chart2019" @click="showChart('chart2019')" />
-          <div id="chart2020" @click="showChart('chart2020')" />
-        </div>
-        <div class="chart-row">
-          <div id="chart2021" @click="showChart('chart2021')" />
-          <div id="chart2022" @click="showChart('chart2022')" />
+        <div id="chartByYear" class="chart" style="display: none;">
+          <div class="chart-row">
+            <div id="chart2011" @click="showChart('chart2011')" />
+            <div id="chart2012" @click="showChart('chart2012')" />
+            <div id="chart2013" @click="showChart('chart2013')" />
+            <div id="chart2014" @click="showChart('chart2014')" />
+          </div>
+          <div class="chart-row">
+            <div id="chart2015" @click="showChart('chart2015')" />
+            <div id="chart2016" @click="showChart('chart2016')" />
+            <div id="chart2017" @click="showChart('chart2017')" />
+            <div id="chart2018" @click="showChart('chart2018')" />
+          </div>
+          <div class="chart-row">
+            <div id="chart2019" @click="showChart('chart2019')" />
+            <div id="chart2020" @click="showChart('chart2020')" />
+            <div id="chart2021" @click="showChart('chart2021')" />
+            <div id="chart2022" @click="showChart('chart2022')" />
+          </div>
         </div>
       </div>
       <div v-if="showModal" id="chartModal" class="modal" style="z-index: 9999;">
@@ -265,14 +264,6 @@ defineExpose({ initialize })
   flex-direction: column;
 }
 
-#chartAll {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding-bottom: 80px;
-}
-
 .tab {
   display: inline-block;
   padding: 10px 20px;
@@ -283,6 +274,10 @@ defineExpose({ initialize })
   color: #333;
   text-decoration: none;
   transition: background-color 0.3s ease;
+}
+
+.tabs {
+  padding-top: 50px;
 }
 
 .tab:hover {
@@ -296,9 +291,15 @@ defineExpose({ initialize })
 
 .chart-row {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 }
 
+.chart {
+  flex: 1 1 auto;
+  min-width: 0; /* To ensure the chart can shrink below its base width */
+  min-height: 0; /* To ensure the chart can shrink below its base height */
+}
 .modal {
   position: fixed;
   top: 50%;
@@ -331,16 +332,11 @@ defineExpose({ initialize })
   cursor: pointer;
 }
 
-#chartByYear::-webkit-scrollbar {
-  width: 10px;
-}
-
-#chartByYear::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-}
-
-#chartByYear::-webkit-scrollbar-thumb:hover {
-  background: #555;
+.chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 </style>
