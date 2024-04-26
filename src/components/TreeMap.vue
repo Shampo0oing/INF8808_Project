@@ -58,8 +58,8 @@ function initialize() {
 function createTreeMap(data) {
   // set the dimensions and margins of the graph
   const margin = { top: 10, right: 10, bottom: 10, left: 10 }
-  const width = 600 - margin.left - margin.right
-  const height = 600 - margin.top - margin.bottom
+  const width = 500 - margin.left - margin.right
+  const height = 500 - margin.top - margin.bottom
 
   if (!treeMap) {
     tooltip = d3

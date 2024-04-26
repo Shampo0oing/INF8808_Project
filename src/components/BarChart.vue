@@ -203,7 +203,7 @@ defineExpose({ initialize })
         <p>En revanche, les accidents survenant sous des conditions météorologiques plus adverses, telles que la pluie (23 462), la neige ou la grêle (17 749), la poudrerie et le verglas (2752 et 1 090 respectivement), affichent des chiffres sensiblement inférieurs.</p>
       </section>
       <section>
-        <p>L'examen des données annuelles révèle  une prédominance marquée des accidents se produit sous des conditions météorologiques claires, avec des chiffres variant légèrement d'une année à l'autre mais restant significativement élevés. </p>
+        <p>L'examen des données annuelles révèle une prédominance marquée des accidents se produisant sous des conditions météorologiques claires, avec des chiffres variant légèrement d'une année à l'autre mais restant significativement élevés. </p>
       </section>
       <section>
         <p> Ces constatations soulignent l'importance de la prudence et de l'adaptation du comportement de conduite, quelle que soit la météo, pour garantir la sécurité sur nos routes.</p>

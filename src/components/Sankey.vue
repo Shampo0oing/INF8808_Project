@@ -123,22 +123,21 @@ defineExpose({ initialize })
       <section>
         <h1>Période de la journée</h1>
         <p>
-          Nous sommes en général inclinés à croire qu'il y a plus d'accidents la
-          nuit à cause de la fatigue au volant et d'une visibilité réduite. Mais
-          nous pouvons voir que la majorité des accidents se produisent durant
-          le jour, probablement en raison du volume plus élevé de circulation.
+          Nous avons généralement tendance à croire qu'il y a davantage d'accidents
+          la nuit en raison de la fatigue au volant et d'une visibilité réduite.
+          Cependant, nous constatons que la majorité des accidents surviennent en réalité
+          durant la journée, probablement en raison du volume plus élevé de circulation.
         </p>
       </section>
       <section>
         <h1>Gravité des accidents</h1>
         <p>
-          Il est remarquable que la grande majorité entraîne des dommages
-          matériels. De plus, bien que le nombre d'accidents mortels ou graves
-          soit à peu près équivalent tant le jour que la nuit, il y a environ
-          trois fois plus d'accidents durant le jour. Ce contraste accentué,
-          avec un nombre plus élevé d'accidents la journée, pourrait s'expliquer
-          par la meilleure visibilité offerte par la lumière du jour, permettant
-          ainsi aux conducteurs de ralentir et de mieux maîtriser leur véhicule.
+          Il est remarquable que la grande majorité de ces accidents entraîne des dommages matériels.
+          De plus, bien que le nombre d'accidents mortels ou graves soit à peu près équivalent de jour
+          comme de nuit, il y a environ trois fois plus d'accidents durant la journée.
+          Ce contraste marqué, avec un nombre plus élevé d'accidents pendant les heures diurnes,
+          pourrait s'expliquer par la meilleure visibilité offerte par la lumière du jour, permettant ainsi
+          aux conducteurs de ralentir et de mieux maîtriser leur véhicule.
         </p>
       </section>
       <section>

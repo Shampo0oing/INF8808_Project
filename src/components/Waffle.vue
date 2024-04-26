@@ -180,12 +180,12 @@ defineExpose({ initialize })
 
 h2 {
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .block {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   margin: 4px;
 }
 
