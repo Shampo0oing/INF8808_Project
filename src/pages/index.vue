@@ -61,30 +61,6 @@ onMounted(async () => {
         <Measures ref="measuresRef" />
         <Methodology ref="methodologyRef" />
       </div>
-      <!-- <div class="credits">
-        <div>
-          <h2>Programmeurs</h2>
-          <ul class="users">
-            <li>Mohamed Issam Berrahil</li>
-            <li>Thi Ngoc Dung Nguyen</li>
-            <li>Anthelme Clisson</li>
-            <li>Vincent Nguyen</li>
-            <li>David Amoussa</li>
-            <li>Jason Wong</li>
-          </ul>
-        </div>
-        <div>
-          <h2>Source</h2>
-          <ul>
-            <li>
-              <a
-                href="https://www.donneesquebec.ca/recherche/fr/dataset/rapports-d-accident"
-                >Rapports d'accident à Montréal de 2011 à 2022</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -92,17 +68,5 @@ onMounted(async () => {
 <style>
 .section {
   height: 100vh;
-}
-
-.credits {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-around;
-  padding: 2rem;
-  background-color: #f5f5f5;
-}
-
-.users {
 }
 </style>
