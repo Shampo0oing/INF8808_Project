@@ -7,6 +7,7 @@ import StackedBarplot from '~/components/StackedBarplot.vue'
 import TreeMap from '~/components/TreeMap.vue'
 import Waffle from '~/components/Waffle.vue'
 import Measures from '~/components/Measures.vue'
+import Methodology from '~/components/Methodology.vue'
 
 defineOptions({
   name: 'IndexPage',
@@ -19,6 +20,7 @@ const waffleRef = ref<InstanceType<typeof Waffle>>()
 const stackedBarplotRef = ref<InstanceType<typeof StackedBarplot>>()
 const sankeyRef = ref<InstanceType<typeof Sankey>>()
 const measuresRef = ref<InstanceType<typeof Measures>>()
+const methodologyRef = ref<InstanceType<typeof Methodology>>()
 
 onMounted(async () => {
   let elements: HTMLElement[] = [];
@@ -36,8 +38,9 @@ onMounted(async () => {
     sankeyRef.value!.initialize(),
     stackedBarplotRef.value!.initialize(),
     measuresRef.value!.initialize(),
-  ]).then(([c1, c2, c3, c4, c5, c6, c7]) => {
-    scroller([c1, c2, c3, c4, c5, c6, c7]).initialize()
+    methodologyRef.value!.initialize(),
+  ]).then(([c1, c2, c3, c4, c5, c6, c7, c8]) => {
+    scroller([c1, c2, c3, c4, c5, c6, c7, c8]).initialize()
   })
 })
 </script>
@@ -56,7 +59,32 @@ onMounted(async () => {
         <Sankey ref="sankeyRef" />
         <StackedBarplot ref="stackedBarplotRef" />
         <Measures ref="measuresRef" />
+        <Methodology ref="methodologyRef" />
       </div>
+      <!-- <div class="credits">
+        <div>
+          <h2>Programmeurs</h2>
+          <ul class="users">
+            <li>Mohamed Issam Berrahil</li>
+            <li>Thi Ngoc Dung Nguyen</li>
+            <li>Anthelme Clisson</li>
+            <li>Vincent Nguyen</li>
+            <li>David Amoussa</li>
+            <li>Jason Wong</li>
+          </ul>
+        </div>
+        <div>
+          <h2>Source</h2>
+          <ul>
+            <li>
+              <a
+                href="https://www.donneesquebec.ca/recherche/fr/dataset/rapports-d-accident"
+                >Rapports d'accident à Montréal de 2011 à 2022</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -64,5 +92,17 @@ onMounted(async () => {
 <style>
 .section {
   height: 100vh;
+}
+
+.credits {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 2rem;
+  background-color: #f5f5f5;
+}
+
+.users {
 }
 </style>

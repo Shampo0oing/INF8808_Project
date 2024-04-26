@@ -46,7 +46,7 @@ defineExpose({ initialize })
     <div class="steps measures-details">
       <section class="measures-details-item">
         <span class="item-number">1</span>
-        <img src="/public/car-search.svg">
+        <img src="/car-search.svg">
         <h3>Maintenir son véhicule</h3>
         <p>
           Effectuer régulièrement l'entretien de son véhicule, y compris les
@@ -56,7 +56,7 @@ defineExpose({ initialize })
       </section>
       <section class="measures-details-item">
         <span class="item-number">2</span>
-        <img src="/public/priority.svg">
+        <img src="/priority.svg">
         <h3>Règles de priorité</h3>
         <p>
           Donner la priorité aux piétons, aux cyclistes et aux autres véhicules
@@ -66,7 +66,7 @@ defineExpose({ initialize })
       </section>
       <section class="measures-details-item">
         <span class="item-number">3</span>
-        <img src="/public/food.svg">
+        <img src="/food.svg">
         <h3>Distraction</h3>
         <p>
           Éviter les distractions telles que l'utilisation du téléphone portable
@@ -76,7 +76,7 @@ defineExpose({ initialize })
       </section>
       <section class="measures-details-item">
         <span class="item-number">4</span>
-        <img src="/public/weather.svg">
+        <img src="/weather.svg">
         <h3>S'informer</h3>
         <p>
           Adapter sa conduite aux conditions météorologiques, comme la pluie, la
@@ -86,7 +86,7 @@ defineExpose({ initialize })
       </section>
       <section class="measures-details-item">
         <span class="item-number">5</span>
-        <img src="/public/priority.svg">
+        <img src="/priority.svg">
         <h3>Distance de securité</h3>
         <p>
           Garder une distance adéquate entre votre véhicule et celui qui vous
@@ -96,7 +96,7 @@ defineExpose({ initialize })
       </section>
       <section class="measures-details-item">
         <span class="item-number">6</span>
-        <img src="/public/speed.svg">
+        <img src="/speed.svg">
         <h3>Vitesse</h3>
         <p>
           Adapter sa vitesse aux conditions de la route et respecter les limites
@@ -146,7 +146,7 @@ defineExpose({ initialize })
   flex-direction: column;
   gap: 50px;
   background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    url('/public/right.jpg');
+    url('/right.jpg');
   background-attachment: fixed;
   background-size: 50%;
   padding: 32vh 0 32vh 0 !important;
