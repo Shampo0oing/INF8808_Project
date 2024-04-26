@@ -1,0 +1,30 @@
+<svg transform="scale(1)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="show_show__wrapper__graphic__5Waiy ">
+<title>React</title>
+<defs>
+<style>
+    <!-- .cls-1{fill:#3fe2fd;}.cls-2{fill:none;}.cls-3{fill:#0072a9;} -->
+
+    .cls-1{
+      fill:#3fe2fd;
+    }
+    .cls-2{
+      fill:none;
+    }
+    .cls-3{
+      fill:#0072a9;
+    }
+    @media (prefers-color-scheme: dark) {
+      .cls-1{
+        fill:#3fe2fd;
+      }
+      .cls-2{
+        fill:none;
+      }
+      .cls-3{
+        fill:#3fe2fd;
+      }
+    }
+</style>
+</defs>
+<g id="_0502_Pie_Chart_1" data-name="0502_Pie_Chart_1"><g id="Layer_1" data-name="Layer 1"><path class="cls-1" d="M50.57,15.85l.23,33.67,32.64-8.47S78.51,19.52,50.57,15.85Z"></path><path class="cls-1" d="M68.89,77.68a34,34,0,1,1-22-60.83c-8.84,2.85-30.41,12.61-26,39C25.62,84.08,56.81,83.59,68.89,77.68Z"></path></g><g id="Layer_5" data-name="Layer 5"><path class="cls-2" d="M51.42,48.17,81.69,40.4A33.17,33.17,0,0,0,51.42,16.92Z"></path><path class="cls-2" d="M50,83.11A33.14,33.14,0,0,0,83.11,50a33.61,33.61,0,0,0-.71-6.85L50.35,51.38a1.34,1.34,0,0,1-.35,0A1.41,1.41,0,0,1,48.58,50V16.92A33.11,33.11,0,0,0,50,83.11Z"></path><path class="cls-3" d="M50,86A36,36,0,1,0,14,50,36,36,0,0,0,50,86ZM81.69,40.41,51.42,48.17V16.92A33.17,33.17,0,0,1,81.69,40.4ZM48.58,16.92V50A1.41,1.41,0,0,0,50,51.42a1.34,1.34,0,0,0,.35,0L82.4,43.15A33.61,33.61,0,0,1,83.11,50,33.11,33.11,0,1,1,48.58,16.92Z"></path></g></g>
+</svg>
