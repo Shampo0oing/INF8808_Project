@@ -1,6 +1,9 @@
 <script setup>
 import * as d3 from 'd3'
 import waffleData from '~/data/waffle/Types_Vehicules.json'
+import useColorPalette from '~/composables/color'
+
+const color = useColorPalette()
 
 function initialize() {
   return new Promise((resolve) => {
@@ -29,9 +32,7 @@ function initialize() {
       () => {
         waffle
           .selectAll('.block')
-          .filter(
-            (d, i) => i >= data[2].value + data[3].value + data[4].value,
-          )
+          .filter((d, i) => i >= data[2].value + data[3].value + data[4].value)
           .remove()
 
         setWaffle()
@@ -40,8 +41,8 @@ function initialize() {
           .selectAll('.block')
           .filter((d, i) => i < data[4].value)
           .transition()
-          .delay((d, i) => i * 20)
-          .style('background-color', '#FE4A49')
+          .delay((d, i) => i * 15)
+          .style('background-color', color.red)
 
         waffle
           .selectAll('.block')
@@ -49,8 +50,8 @@ function initialize() {
             (d, i) => i >= data[4].value && i < data[3].value + data[4].value,
           )
           .transition()
-          .delay((d, i) => i * 20 + data[4].value * 20)
-          .style('background-color', '#FFC107')
+          .delay((d, i) => i * 15 + data[4].value * 15)
+          .style('background-color', color.yellow)
 
         waffle
           .selectAll('.block')
@@ -60,8 +61,8 @@ function initialize() {
               && i < data[2].value + data[3].value + data[4].value,
           )
           .transition()
-          .delay((d, i) => i * 20 + (data[3].value + data[4].value) * 20)
-          .style('background-color', '#4CAF50')
+          .delay((d, i) => i * 15 + (data[3].value + data[4].value) * 15)
+          .style('background-color', color.green)
       },
       () => {
         waffle
@@ -69,23 +70,21 @@ function initialize() {
           .filter(
             (d, i) =>
               i >= data[2].value + data[3].value + data[4].value
-              && i
-              < data[1].value + data[2].value + data[3].value + data[4].value,
+              && i < data[1].value + data[2].value + data[3].value + data[4].value,
           )
           .transition()
-          .delay((d, i) => i * 5)
-          .style('background-color', '#2196F3')
+          .delay((d, i) => i * 2)
+          .style('background-color', color.blue)
 
         waffle
           .selectAll('.block')
           .filter(
             (d, i) =>
-              i
-              >= data[1].value + data[2].value + data[3].value + data[4].value,
+              i >= data[1].value + data[2].value + data[3].value + data[4].value,
           )
           .transition()
-          .delay((d, i) => i * 5 + data[1].value * 5)
-          .style('background-color', '#9C27B0')
+          .delay((d, i) => i * 2 + data[1].value * 2)
+          .style('background-color', color.pink)
       },
     ])
   })
@@ -124,31 +123,31 @@ defineExpose({ initialize })
       </div>
       <div class="legend">
         <div class="legend-item">
-          <div class="circle" style="background-color: #9c27b0" />
+          <div class="circle" :style="{ 'background-color': color.pink }" />
           <div class="legend-label">
             Automobile
           </div>
         </div>
         <div class="legend-item">
-          <div class="circle" style="background-color: #2196f3" />
+          <div class="circle" :style="{ 'background-color': color.blue }" />
           <div class="legend-label">
             Camion
           </div>
         </div>
         <div class="legend-item">
-          <div class="circle" style="background-color: #4caf50" />
+          <div class="circle" :style="{ 'background-color': color.green }" />
           <div class="legend-label">
             Motocyclette
           </div>
         </div>
         <div class="legend-item">
-          <div class="circle" style="background-color: #ffc107" />
+          <div class="circle" :style="{ 'background-color': color.yellow }" />
           <div class="legend-label">
             Vélo
           </div>
         </div>
         <div class="legend-item">
-          <div class="circle" style="background-color: #fe4a49" />
+          <div class="circle" :style="{ 'background-color': color.red }" />
           <div class="legend-label">
             Piéton
           </div>

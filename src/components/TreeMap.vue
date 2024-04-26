@@ -1,7 +1,7 @@
 <script setup>
 import * as d3 from 'd3'
-import jsonDefaultData from '~/data/TreeMap/TreeMapDefault.json'
-import jsonSeriousData from '~/data/TreeMap/TreeMapSerious.json'
+import jsonDefaultData from '~/data/treeMap/TreeMapDefault.json'
+import jsonSeriousData from '~/data/treeMap/TreeMapSerious.json'
 import useColorPalette from '~/composables/color'
 
 const color = useColorPalette()
@@ -62,7 +62,8 @@ function createTreeMap(data) {
   const height = 600 - margin.top - margin.bottom
 
   if (!treeMap) {
-    tooltip = d3.select('#treeMap')
+    tooltip = d3
+      .select('#treeMap')
       .selectAll('.tooltip')
       .data([null]) // Bind a single-item array to the tooltip
       .join('article') // Enter new tooltips or update existing ones
@@ -92,7 +93,7 @@ function createTreeMap(data) {
     .sum((d) => {
       return +d.value
     }) // Compute the numeric value for each entity
-    .sort((a, b) => (b.height - a.height || b.value - a.value))
+    .sort((a, b) => b.height - a.height || b.value - a.value)
 
   // Then d3.treemap computes the position of each element of the hierarchy
   // The coordinates are added to the root object above
@@ -102,58 +103,75 @@ function createTreeMap(data) {
     .selectAll('div')
     .data(root.leaves(), d => d.data.name) // Add a key function here
     .join(
-      enter => enter.append('div') // Enter new elements
-        .attr('class', 'leaf')
-        .style('left', d => `${d.x0}px`)
-        .style('top', d => `${d.y0}px`)
-        .style('width', d => `${d.x1 - d.x0}px`)
-        .style('height', d => `${d.y1 - d.y0}px`)
-        .style('background-color', d => getColor(d.data.name))
-        .style('background-image', d => imageURL[d.data.name] ? `url(${imageURL[d.data.name]})` : 'none')
-        .style('background-repeat', 'no-repeat')
-        .style('background-position', 'center bottom')
-        .style('background-size', d => (d.y1 - d.y0) > (d.x1 - d.x0) ? '100% auto' : 'auto 100%')
-        .style('border', '1px solid black')
-        .style('position', 'absolute')
-        .style('opacity', 0)
-        .on('mouseover', (event, d) => {
-          tooltip.transition()
-            .duration(200)
-            .style('opacity', 0.9)
-          tooltip.text(getAccidentDescription(d.data.name, d.data.value, d.data.percentage))
-        })
-        .on('mousemove', (event) => {
-          tooltip
-            .style('left', `${event.pageX}px`)
-            .style('top', `${event.pageY - 28}px`)
-        })
-        .on('mouseout', () => {
-          tooltip.transition()
-            .duration(500)
-            .style('opacity', 0)
-        })
-        .call(enter => enter.transition() // Add a transition to the entering elements
-          .duration(300)
-          .delay((_, i) => i * 50)
-          .ease(d3.easeQuadInOut).style('opacity', 1),
-        ),
-      update => update // Update existing elements
-        .call(update => update.transition() // Add a transition to the updating elements
-          .duration(300)
-          .ease(d3.easeQuadInOut)
+      enter =>
+        enter
+          .append('div') // Enter new elements
+          .attr('class', 'leaf')
           .style('left', d => `${d.x0}px`)
           .style('top', d => `${d.y0}px`)
           .style('width', d => `${d.x1 - d.x0}px`)
           .style('height', d => `${d.y1 - d.y0}px`)
-          .style('opacity', 1)
-          .style('background-size', d => (d.y1 - d.y0) > (d.x1 - d.x0) ? '100% auto' : 'auto 100%'),
-        ),
-      exit => exit // Exit old elements
-        .call(exit => exit.transition() // Add a transition to the exiting elements
-          .duration(300)
-          .ease(d3.easeQuadInOut)
+          .style('background-color', d => getColor(d.data.name))
+          .style('background-image', d =>
+            imageURL[d.data.name] ? `url(${imageURL[d.data.name]})` : 'none')
+          .style('background-repeat', 'no-repeat')
+          .style('background-position', 'center bottom')
+          .style('background-size', d =>
+            d.y1 - d.y0 > d.x1 - d.x0 ? '100% auto' : 'auto 100%')
+          .style('border', '1px solid black')
+          .style('position', 'absolute')
           .style('opacity', 0)
-          .remove()),
+          .on('mouseover', (event, d) => {
+            tooltip.transition().duration(200).style('opacity', 0.9)
+            tooltip.text(
+              getAccidentDescription(
+                d.data.name,
+                d.data.value,
+                d.data.percentage,
+              ),
+            )
+          })
+          .on('mousemove', (event) => {
+            tooltip
+              .style('left', `${event.pageX}px`)
+              .style('top', `${event.pageY - 28}px`)
+          })
+          .on('mouseout', () => {
+            tooltip.transition().duration(500).style('opacity', 0)
+          })
+          .call(enter =>
+            enter
+              .transition() // Add a transition to the entering elements
+              .duration(300)
+              .delay((_, i) => i * 50)
+              .ease(d3.easeQuadInOut)
+              .style('opacity', 1),
+          ),
+      update =>
+        update // Update existing elements
+          .call(update =>
+            update
+              .transition() // Add a transition to the updating elements
+              .duration(300)
+              .ease(d3.easeQuadInOut)
+              .style('left', d => `${d.x0}px`)
+              .style('top', d => `${d.y0}px`)
+              .style('width', d => `${d.x1 - d.x0}px`)
+              .style('height', d => `${d.y1 - d.y0}px`)
+              .style('opacity', 1)
+              .style('background-size', d =>
+                d.y1 - d.y0 > d.x1 - d.x0 ? '100% auto' : 'auto 100%'),
+          ),
+      exit =>
+        exit // Exit old elements
+          .call(exit =>
+            exit
+              .transition() // Add a transition to the exiting elements
+              .duration(300)
+              .ease(d3.easeQuadInOut)
+              .style('opacity', 0)
+              .remove(),
+          ),
     )
 
   // and to add the text labels
@@ -203,7 +221,8 @@ function getAccidentDescription(accident, value, percentage) {
       type = 'étaient dus à une collision avec un véhicule routier.'
       break
     case 'objet fixe':
-      type = 'étaient dus à une collision avec un objet fixe. (lampadaire, poteau, arbre, bâtiment, etc.)'
+      type
+        = 'étaient dus à une collision avec un objet fixe. (lampadaire, poteau, arbre, bâtiment, etc.)'
       break
     case 'piéton':
       type = 'étaient dus à une collision avec un piéton.'
@@ -212,13 +231,15 @@ function getAccidentDescription(accident, value, percentage) {
       type = 'étaient dus à une collision avec un cycliste.'
       break
     case 'sans collision':
-      type = 'n\'ont pas été causés par une collision. (renversement, quitte la chaussée, etc.)'
+      type
+        = 'n\'ont pas été causés par une collision. (renversement, quitte la chaussée, etc.)'
       break
     case 'animal':
       type = 'étaient dus à une collision avec un animal.'
       break
     default:
-      type = 'étaient dus à un autre genre de collision. (collision avec un train, objet d\'étaché, etc.)'
+      type
+        = 'étaient dus à un autre genre de collision. (collision avec un train, objet d\'étaché, etc.)'
   }
 
   return `Parmis les ${formatNumber(currentTotal.value)} accidents recensés, ${formatNumber(value)} (soit ${percentage}) ${type}`
