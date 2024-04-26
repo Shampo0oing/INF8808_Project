@@ -204,12 +204,12 @@ defineExpose({ initialize })
       </section>
       <section>
         <p>
-          Voici une visualisation des 4 états de surface de route causant le plus d'accidents, ainsi que leur niveau de gravité
+          Voici une visualisation des 4 états de surface de route causant le plus d'accidents, ainsi que leur niveau de gravité.
         </p>
       </section>
       <section>
         <p>
-          Voici une visualisation des 4 états de surface de route causant le moins d'accidents, ainsi que leur niveau de gravité
+          Voici une visualisation des 4 états de surface de route causant le moins d'accidents, ainsi que leur niveau de gravité.
         </p>
       </section>
       <section>

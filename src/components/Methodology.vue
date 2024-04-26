@@ -65,7 +65,7 @@ defineExpose({ initialize })
         <h3>Visualisation des Données</h3>
         <p>
           Enfin, les résultats de l'analyse sont présentés visuellement à l'aide
-          de graphiques, de tableaux et d'autres outils de visualisation des
+          de graphiques et d'autres outils de visualisation des
           données. Ces visualisations permettent de communiquer efficacement les
           conclusions de l'analyse et de mettre en évidence les principaux
           résultats de manière claire et concise.
@@ -73,33 +73,55 @@ defineExpose({ initialize })
       </section>
     </div>
     <div class="viz measures-intro">
-      <h1>Méthodologie</h1>
-      <p>
-        La section ici présente se concentre sur la méthodologie utilisée pour
-        recueillir, traiter et visualiser les données relatives aux accidents
-        routiers. Cette méthodologie comprend plusieurs étapes cruciales, allant
-        de la collecte initiale des données à leur présentation visuelle.
-      </p>
+      <div>
+        <h1>Méthodologie</h1>
+        <p>
+          La section ici présente se concentre sur la méthodologie utilisée pour
+          recueillir, traiter et visualiser les données relatives aux accidents
+          routiers. Cette méthodologie comprend plusieurs étapes cruciales, allant
+          de la collecte initiale des données à leur présentation visuelle.
+        </p>
+      </div>
+      <div class="w-full">
+        <h2 class="mb-4">
+          Ce projet à été réalisé dans le cadre du cours INF8808 <br> et vous à été présenté par:
+        </h2>
+        <p>Mohamed Issam Berrahil</p>
+        <p>Anthelme Clisson</p>
+        <p>Vincent Nguyen</p>
+        <p>Jason Wong</p>
+        <p>Thi Ngoc Dung Nguyen</p>
+        <p>David Amoussa</p>
+      </div>
     </div>
   </section>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .measures {
   padding-right: 0 !important;
   padding-left: 0 !important;
 }
 
 .measures-intro {
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 100px;
   min-height: 100vh;
   padding: 0px 150px;
   text-align: start;
+
   h1 {
     font-size: 3rem;
     font-weight: 700;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 400;
     width: 100%;
     margin-bottom: 1rem;
   }

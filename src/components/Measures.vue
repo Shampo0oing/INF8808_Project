@@ -59,9 +59,8 @@ defineExpose({ initialize })
         <img src="/priority.svg">
         <h3>Règles de priorité</h3>
         <p>
-          Donner la priorité aux piétons, aux cyclistes et aux autres véhicules
-          selon les règles de circulation peut éviter les collisions et les
-          accidents.
+          Donner la priorité aux piétons et aux cyclistes en étant le plus vigilant possible
+          peut réduire les risques d'accidents mortels ou graves.
         </p>
       </section>
       <section class="measures-details-item">
